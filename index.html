@@ -797,6 +797,220 @@
       .hp-label { font-size: .32rem; }
     }
 
+    /* ===== MINI-GAME: FJORD FISHING ===== */
+    .fish-card {
+      overflow: hidden;
+    }
+    .fish-card .section-heading {
+      margin-bottom: .75rem;
+    }
+    .fish-hint {
+      margin: 0 0 .85rem;
+      color: var(--ash);
+      font-size: 1.15rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .fish-arena {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      padding: .85rem .7rem 1rem;
+      border: 3px solid #1a2a14;
+      box-shadow: inset 0 0 0 1px #0a1208, 3px 3px 0 #000;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: none;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(6,18,22,.7) 0%, rgba(4,12,16,.35) 35%, transparent 65%),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(20,60,70,.35), transparent 60%),
+        linear-gradient(180deg, #0a1418 0%, #0c1a14 50%, #081210 100%);
+      image-rendering: pixelated;
+    }
+    .fish-arena::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .4;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 10px, rgba(57,255,20,.03) 10px 11px),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40'%3E%3Cpath fill='none' stroke='%231a3a44' stroke-width='2' d='M0 20 Q25 5 50 20 T100 20 T150 20 T200 20'/%3E%3C/svg%3E");
+      background-size: auto, 120px 24px;
+      background-repeat: repeat, repeat-x;
+      background-position: 0 0, 0 18%;
+    }
+    .fish-play {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 1.1rem;
+      min-height: 240px;
+      padding: .3rem .2rem;
+    }
+    .fish-track-wrap {
+      position: relative;
+      width: 72px;
+      flex-shrink: 0;
+    }
+    .fish-track {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      border: 3px solid #000;
+      background:
+        repeating-linear-gradient(0deg, #0a181c 0 8px, #0c1c20 8px 16px);
+      box-shadow: inset 0 0 0 2px #1a3038, 3px 3px 0 #000;
+      overflow: hidden;
+    }
+    .fish-track-water {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(40,120,140,.12), rgba(20,60,80,.28));
+      opacity: .85;
+    }
+    .fish-bar {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      height: 28%;
+      bottom: 0;
+      background: linear-gradient(180deg, #5cff3a 0%, var(--toxic) 45%, var(--toxic-dim) 100%);
+      border: 2px solid #0a2a05;
+      box-shadow: 0 0 10px rgba(57,255,20,.45), inset 0 0 0 1px rgba(255,255,255,.15);
+      image-rendering: pixelated;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .fish-icon {
+      position: absolute;
+      left: 50%;
+      width: 36px;
+      height: 28px;
+      margin-left: -18px;
+      z-index: 3;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 0 rgba(0,0,0,.55));
+      transform: translateY(0);
+      will-change: transform;
+    }
+    .fish-icon svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .fish-side {
+      flex: 1;
+      max-width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+      justify-content: center;
+      min-width: 0;
+    }
+    .fish-meter-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .4rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .38rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--toxic);
+    }
+    .fish-meter-label .fish-meter-num { color: var(--blood-bright); }
+    .fish-meter {
+      height: 14px;
+      border: 2px solid #000;
+      background: #050605;
+      box-shadow: inset 0 0 0 1px #1a2218, 2px 2px 0 #000;
+      overflow: hidden;
+    }
+    .fish-meter-fill {
+      height: 100%;
+      width: 25%;
+      background: linear-gradient(180deg, #5cff3a 0%, var(--toxic) 40%, var(--toxic-dim) 100%);
+      box-shadow: 0 0 8px rgba(57,255,20,.45);
+      image-rendering: pixelated;
+    }
+    .fish-meter-fill.draining {
+      background: linear-gradient(180deg, #ff4a4a 0%, var(--blood-bright) 40%, var(--blood) 100%);
+      box-shadow: 0 0 8px rgba(255,26,26,.4);
+    }
+    .fish-status {
+      margin: 0;
+      color: var(--ash);
+      font-size: 1.1rem;
+      line-height: 1.25;
+      min-height: 2.6em;
+    }
+    .fish-status.bite { color: var(--warn); }
+    .fish-status.hooked { color: var(--toxic); }
+    .fish-status.lost { color: var(--blood-bright); }
+    .fish-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .85rem;
+      background: rgba(2,4,2,.82);
+      text-align: center;
+      padding: 1rem;
+    }
+    .fish-overlay.visible { display: flex; }
+    .fish-result {
+      margin: 0;
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(.55rem, 2.6vw, .85rem);
+      line-height: 1.45;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
+      max-width: 22rem;
+    }
+    .fish-result.win { color: var(--toxic); }
+    .fish-result.lose { color: var(--blood-bright); }
+    .fish-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      justify-content: center;
+      margin-top: .95rem;
+    }
+    .fish-controls button {
+      min-width: 140px;
+    }
+    #fish-hold.is-held {
+      color: #050605;
+      background: var(--blood-bright);
+      border-color: var(--blood-bright);
+      box-shadow: 3px 3px 0 #000, inset -2px -2px 0 rgba(0,0,0,.25);
+    }
+    #fish-hold:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fish-icon { will-change: auto; }
+      .fish-meter-fill { transition: none; }
+    }
+    @media (max-width: 430px) {
+      .fish-arena { min-height: 260px; padding: .7rem .55rem .85rem; }
+      .fish-play { gap: .75rem; min-height: 220px; }
+      .fish-track { height: 220px; }
+      .fish-track-wrap { width: 64px; }
+      .fish-meter-label { font-size: .32rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -908,6 +1122,53 @@
       <div class="fight-controls">
         <button type="button" id="fight-punch">PUNCH</button>
         <button type="button" class="secondary" id="fight-reset">RESET</button>
+      </div>
+    </section>
+
+    <section class="card fish-card" aria-labelledby="fish-title">
+      <div class="section-heading">
+        <h2 id="fish-title">FJORD FISHING</h2>
+        <span class="section-kicker">Hold to reel · Stardew-style</span>
+      </div>
+      <p class="fish-hint">Cast, wait for the bite, then keep the fish inside the green bar. Hold SPACE / HOLD / tap the track.</p>
+      <div class="fish-arena" id="fish-arena" aria-label="Fishing mini-game">
+        <div class="fish-play" id="fish-play" hidden>
+          <div class="fish-track-wrap">
+            <div class="fish-track" id="fish-track" role="application" tabindex="0" aria-label="Fishing track. Hold to raise the catch bar.">
+              <div class="fish-track-water" aria-hidden="true"></div>
+              <div class="fish-bar" id="fish-bar" aria-hidden="true"></div>
+              <div class="fish-icon" id="fish-icon" aria-hidden="true">
+                <svg viewBox="0 0 36 28" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+                  <rect x="6" y="10" width="18" height="10" fill="#c45a14"/>
+                  <rect x="4" y="12" width="4" height="6" fill="#a84810"/>
+                  <rect x="22" y="8" width="8" height="12" fill="#e07020"/>
+                  <rect x="28" y="10" width="6" height="8" fill="#8a3010"/>
+                  <rect x="30" y="12" width="4" height="4" fill="#ffd060"/>
+                  <rect x="24" y="12" width="3" height="3" fill="#111"/>
+                  <rect x="2" y="8" width="6" height="4" fill="#39ff14"/>
+                  <rect x="2" y="16" width="6" height="4" fill="#1a8f0a"/>
+                  <rect x="14" y="8" width="6" height="3" fill="#a84810"/>
+                  <rect x="10" y="18" width="8" height="3" fill="#8a3010"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="fish-side">
+            <div>
+              <div class="fish-meter-label"><span>Catch</span><span class="fish-meter-num" id="fish-meter-num">25%</span></div>
+              <div class="fish-meter" aria-hidden="true"><div class="fish-meter-fill" id="fish-meter-fill" style="width:25%"></div></div>
+            </div>
+            <p class="fish-status hooked" id="fish-status">Fish on! Hold to keep it in the green bar.</p>
+          </div>
+        </div>
+        <div class="fish-overlay visible" id="fish-overlay" aria-live="polite">
+          <p class="fish-result" id="fish-result">Ready to cast into the black forest fjord?</p>
+          <button type="button" id="fish-cast">CAST LINE</button>
+        </div>
+      </div>
+      <div class="fish-controls">
+        <button type="button" id="fish-hold" disabled aria-pressed="false">HOLD</button>
+        <button type="button" class="secondary" id="fish-recast">RECAST</button>
       </div>
     </section>
 
@@ -1288,6 +1549,359 @@
 
       resetGame();
     })();
+
+
+    /* ===== Fjord Fishing mini-game (Stardew-style) ===== */
+    (function initFjordFishing() {
+      const TRACK_H = 240;
+      const BAR_H_RATIO = 0.30;
+      const FISH_H = 28;
+      const START_PROGRESS = 0.28;
+      const FILL_RATE = 0.22;   // per second when overlapping
+      const DRAIN_RATE = 0.14;  // per second when outside
+      const GRAVITY = 520;      // px/s^2 downward on bar
+      const LIFT = 780;         // px/s^2 upward while held
+      const BAR_MAX_V = 340;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const WIN_LINES = [
+        'Landed a fjord serpent! The gods approve.',
+        'Fresh catch for the longhouse feast!',
+        'You reeled in destiny — Valhalla snacks await.',
+        'Trophy fish! Even the boars are jealous.',
+        'The woods yield their treasure. Nice haul!'
+      ];
+      const LOSE_LINES = [
+        'It got away into the mist…',
+        'Line snapped. The fjord laughs.',
+        'Too slow, viking — try again.',
+        'The fish escapes to tell the tale.'
+      ];
+
+      const arena = document.getElementById('fish-arena');
+      const playEl = document.getElementById('fish-play');
+      const track = document.getElementById('fish-track');
+      const barEl = document.getElementById('fish-bar');
+      const fishEl = document.getElementById('fish-icon');
+      const meterFill = document.getElementById('fish-meter-fill');
+      const meterNum = document.getElementById('fish-meter-num');
+      const statusEl = document.getElementById('fish-status');
+      const overlay = document.getElementById('fish-overlay');
+      const resultEl = document.getElementById('fish-result');
+      const castBtn = document.getElementById('fish-cast');
+      const holdBtn = document.getElementById('fish-hold');
+      const recastBtn = document.getElementById('fish-recast');
+      if (!arena || !track || !barEl || !fishEl) return;
+
+      let phase = 'idle'; // idle | waiting | playing | won | lost
+      let holding = false;
+      let progress = START_PROGRESS;
+      let barY = 0;       // bottom of bar from track bottom, in px — actually top from top
+      let barV = 0;
+      let fishY = 0;      // top of fish from top of track
+      let fishV = 0;
+      let fishTarget = 0;
+      let fishRetargetAt = 0;
+      let raf = 0;
+      let lastTs = 0;
+      let waitTimer = 0;
+      let trackHeight = TRACK_H;
+
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function measureTrack() {
+        const h = track.clientHeight || TRACK_H;
+        trackHeight = h;
+        return h;
+      }
+
+      function barHeight() {
+        return Math.max(48, trackHeight * BAR_H_RATIO);
+      }
+
+      function fishMaxY() {
+        return Math.max(0, trackHeight - FISH_H);
+      }
+
+      function barMaxY() {
+        return Math.max(0, trackHeight - barHeight());
+      }
+
+      function setProgress(p) {
+        progress = Math.max(0, Math.min(1, p));
+        const pct = Math.round(progress * 100);
+        meterFill.style.width = pct + '%';
+        meterNum.textContent = pct + '%';
+      }
+
+      function renderPositions() {
+        const bh = barHeight();
+        barEl.style.height = bh + 'px';
+        barEl.style.top = barY + 'px';
+        barEl.style.bottom = 'auto';
+        fishEl.style.top = fishY + 'px';
+        fishEl.style.transform = 'none';
+      }
+
+      function setHolding(on) {
+        if (phase !== 'playing') {
+          holding = false;
+          holdBtn.setAttribute('aria-pressed', 'false');
+          holdBtn.classList.remove('is-held');
+          return;
+        }
+        holding = !!on;
+        holdBtn.setAttribute('aria-pressed', holding ? 'true' : 'false');
+        holdBtn.classList.toggle('is-held', holding);
+      }
+
+      function stopLoop() {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        lastTs = 0;
+      }
+
+      function clearWait() {
+        if (waitTimer) clearTimeout(waitTimer);
+        waitTimer = 0;
+      }
+
+      function showOverlay(text, kind, buttonLabel) {
+        resultEl.textContent = text;
+        resultEl.className = 'fish-result' + (kind ? ' ' + kind : '');
+        castBtn.textContent = buttonLabel || 'CAST LINE';
+        overlay.classList.add('visible');
+        playEl.hidden = true;
+        holdBtn.disabled = true;
+        setHolding(false);
+      }
+
+      function hideOverlay() {
+        overlay.classList.remove('visible');
+        playEl.hidden = false;
+      }
+
+      function endGame(won) {
+        phase = won ? 'won' : 'lost';
+        stopLoop();
+        setHolding(false);
+        holdBtn.disabled = true;
+        if (won) {
+          showOverlay(pick(WIN_LINES), 'win', 'CAST AGAIN');
+        } else {
+          showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
+        }
+      }
+
+      function retargetFish(now) {
+        const maxY = fishMaxY();
+        // Bias toward mid-range; occasional dart to ends — approachable
+        const roll = Math.random();
+        if (roll < 0.55) {
+          fishTarget = maxY * (0.2 + Math.random() * 0.6);
+        } else if (roll < 0.8) {
+          fishTarget = maxY * Math.random();
+        } else {
+          fishTarget = Math.random() < 0.5 ? 0 : maxY;
+        }
+        const dist = Math.abs(fishTarget - fishY);
+        const base = reduceMotion ? 55 : 70 + Math.random() * 55;
+        fishV = (fishTarget >= fishY ? 1 : -1) * base;
+        // Longer dwell when close for approachability
+        fishRetargetAt = now + (reduceMotion ? 900 : 550 + Math.random() * 900) + Math.min(400, dist * 2);
+      }
+
+      function overlap() {
+        const bh = barHeight();
+        const barTop = barY;
+        const barBot = barY + bh;
+        const fishTop = fishY;
+        const fishBot = fishY + FISH_H;
+        // Require meaningful overlap (not just 1px kiss)
+        const overlapPx = Math.min(barBot, fishBot) - Math.max(barTop, fishTop);
+        return overlapPx > FISH_H * 0.35;
+      }
+
+      function tick(ts) {
+        if (phase !== 'playing') return;
+        if (!lastTs) lastTs = ts;
+        let dt = (ts - lastTs) / 1000;
+        lastTs = ts;
+        if (dt > 0.05) dt = 0.05;
+
+        measureTrack();
+        const maxBar = barMaxY();
+        const maxFish = fishMaxY();
+
+        // Bar physics
+        if (holding) {
+          barV -= LIFT * dt;
+        } else {
+          barV += GRAVITY * dt;
+        }
+        barV = Math.max(-BAR_MAX_V, Math.min(BAR_MAX_V, barV));
+        barY += barV * dt;
+        if (barY < 0) { barY = 0; barV = 0; }
+        if (barY > maxBar) { barY = maxBar; barV = 0; }
+
+        // Fish motion
+        if (ts >= fishRetargetAt || Math.abs(fishY - fishTarget) < 4) {
+          retargetFish(ts);
+        }
+        fishY += fishV * dt;
+        // Soft bounce at edges
+        if (fishY < 0) { fishY = 0; fishV = Math.abs(fishV) * 0.6; retargetFish(ts); }
+        if (fishY > maxFish) { fishY = maxFish; fishV = -Math.abs(fishV) * 0.6; retargetFish(ts); }
+        // Ease toward target
+        const pull = (fishTarget - fishY) * (reduceMotion ? 1.6 : 2.2);
+        fishV += pull * dt;
+        const speedCap = reduceMotion ? 95 : 130;
+        fishV = Math.max(-speedCap, Math.min(speedCap, fishV));
+
+        const hit = overlap();
+        meterFill.classList.toggle('draining', !hit);
+        if (hit) {
+          setProgress(progress + FILL_RATE * dt);
+          statusEl.textContent = 'Hooked solid — keep holding the bar on the fish!';
+          statusEl.className = 'fish-status hooked';
+        } else {
+          setProgress(progress - DRAIN_RATE * dt);
+          statusEl.textContent = 'Drifting off… raise or drop the green bar!';
+          statusEl.className = 'fish-status lost';
+        }
+
+        renderPositions();
+
+        if (progress >= 1) {
+          endGame(true);
+          return;
+        }
+        if (progress <= 0) {
+          endGame(false);
+          return;
+        }
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      function startPlaying() {
+        clearWait();
+        phase = 'playing';
+        hideOverlay();
+        holdBtn.disabled = false;
+        measureTrack();
+        setProgress(START_PROGRESS);
+        barY = barMaxY() * 0.55;
+        barV = 0;
+        fishY = fishMaxY() * 0.35;
+        fishV = 0;
+        fishTarget = fishY;
+        fishRetargetAt = 0;
+        statusEl.textContent = 'Fish on! Hold to keep it in the green bar.';
+        statusEl.className = 'fish-status hooked';
+        meterFill.classList.remove('draining');
+        renderPositions();
+        retargetFish(performance.now());
+        stopLoop();
+        lastTs = 0;
+        raf = requestAnimationFrame(tick);
+        try { track.focus({ preventScroll: true }); } catch (e) {}
+      }
+
+      function startCast() {
+        stopLoop();
+        clearWait();
+        phase = 'waiting';
+        setHolding(false);
+        holdBtn.disabled = true;
+        hideOverlay();
+        playEl.hidden = false;
+        measureTrack();
+        setProgress(START_PROGRESS);
+        barY = barMaxY() * 0.7;
+        barV = 0;
+        fishY = -40;
+        renderPositions();
+        statusEl.textContent = 'Waiting for a bite in the misty fjord…';
+        statusEl.className = 'fish-status bite';
+        meterFill.classList.remove('draining');
+        const delay = reduceMotion ? 600 : 700 + Math.random() * 1400;
+        waitTimer = setTimeout(() => {
+          waitTimer = 0;
+          if (phase !== 'waiting') return;
+          statusEl.textContent = 'BITE! Reel it in!';
+          statusEl.className = 'fish-status hooked';
+          startPlaying();
+        }, delay);
+      }
+
+      function onPointerDown(e) {
+        if (phase !== 'playing') return;
+        if (e.target && e.target.closest && e.target.closest('button')) return;
+        e.preventDefault();
+        setHolding(true);
+      }
+      function onPointerUp() {
+        setHolding(false);
+      }
+
+      track.addEventListener('pointerdown', onPointerDown);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
+      track.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      holdBtn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setHolding(true);
+      });
+      holdBtn.addEventListener('pointerup', (e) => {
+        e.preventDefault();
+        setHolding(false);
+      });
+      holdBtn.addEventListener('pointerleave', () => setHolding(false));
+
+      window.addEventListener('keydown', (e) => {
+        if (e.code !== 'Space' && e.key !== ' ') return;
+        // Don't steal space from focused buttons except hold/track
+        const t = e.target;
+        if (t && t !== document.body && t !== track && t !== holdBtn && t.tagName === 'BUTTON' && t !== castBtn) return;
+        if (phase === 'playing') {
+          e.preventDefault();
+          setHolding(true);
+        }
+      });
+      window.addEventListener('keyup', (e) => {
+        if (e.code === 'Space' || e.key === ' ') {
+          setHolding(false);
+        }
+      });
+
+      castBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startCast();
+      });
+      recastBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        startCast();
+      });
+
+      window.addEventListener('blur', () => setHolding(false));
+      window.addEventListener('resize', () => {
+        if (phase === 'playing' || phase === 'waiting') {
+          measureTrack();
+          barY = Math.min(barY, barMaxY());
+          fishY = Math.min(Math.max(0, fishY), fishMaxY());
+          renderPositions();
+        }
+      });
+
+      // Idle overlay ready
+      showOverlay('Ready to cast into the black forest fjord?', '', 'CAST LINE');
+    })();
+
 
   </script>
 </body>
