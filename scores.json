@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-27T02:01:56.852Z",
+  "updatedAt": "2026-09-27T02:02:15.138Z",
   "games": {
     "woods-brawl": {
       "unit": "streak",
@@ -57,6 +57,11 @@
           "name": "Piao liang",
           "score": 1,
           "at": "2026-09-27T01:50:05.993Z"
+        },
+        {
+          "name": "Viking",
+          "score": 1,
+          "at": "2026-09-27T02:02:15.138Z"
         }
       ]
     },
