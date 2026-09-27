@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-27T01:50:08.173Z",
+  "updatedAt": "2026-09-27T01:57:36.947Z",
   "games": {
     "woods-brawl": {
       "unit": "streak",
@@ -59,7 +59,13 @@
     "fireplace-pizza": {
       "unit": "cooks",
       "higherIsBetter": true,
-      "top": []
+      "top": [
+        {
+          "name": "Piao liang",
+          "score": 1,
+          "at": "2026-09-27T01:57:36.947Z"
+        }
+      ]
     },
     "fireplace-pizza-streak": {
       "unit": "streak",
