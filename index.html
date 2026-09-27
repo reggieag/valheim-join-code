@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Live Valheim crossplay join code" />
+  <title>VALHEIM // JOIN CODE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --void: #050605;
+      --void-soft: #0a0c0a;
+      --panel: #0e120e;
+      --panel-edge: #1a2218;
+      --blood: #c41414;
+      --blood-bright: #ff1a1a;
+      --toxic: #39ff14;
+      --toxic-dim: #1a8f0a;
+      --ash: #9aa08a;
+      --text: #d4e0c8;
+      --muted: #6a7560;
+      --ok: #39ff14;
+      --warn: #e8c41a;
+      --err: #ff1a1a;
+      --line: #2a3a22;
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "VT323", "Share Tech Mono", monospace;
+      font-size: 22px;
+      background-color: var(--void);
+      background-image:
+        linear-gradient(rgba(57,255,20,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(57,255,20,.03) 1px, transparent 1px),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(196,20,20,.12), transparent 55%),
+        linear-gradient(180deg, #050605 0%, #080a08 50%, #040504 100%);
+      background-size: 16px 16px, 16px 16px, 100% 100%, 100% 100%;
+      padding: 1.5rem 1rem 3rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* CRT scanlines */
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 9999;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0,0,0,.18) 2px,
+        rgba(0,0,0,.18) 3px
+      );
+      opacity: .55;
+    }
+    /* Dark pine woods silhouette at bottom (SVG) */
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      left: 0; right: 0; bottom: 0;
+      height: 28vh;
+      pointer-events: none;
+      background:
+        linear-gradient(to top, #020302 0%, transparent 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 200' preserveAspectRatio='none'%3E%3Cpath fill='%23030403' d='M0 200 L0 140 L20 100 L40 140 L55 70 L70 140 L95 50 L120 140 L140 90 L160 140 L190 40 L220 140 L250 80 L270 140 L300 55 L330 140 L360 75 L385 140 L420 35 L460 140 L490 90 L510 140 L540 60 L570 140 L600 45 L640 140 L670 85 L690 140 L720 55 L750 140 L780 100 L800 140 L800 200 Z'/%3E%3C/svg%3E");
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat;
+      background-position: bottom;
+      opacity: .9;
+      image-rendering: pixelated;
+    }
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(860px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    /* ===== PUNCH STAGE ===== */
+    .punch-stage {
+      text-align: center;
+      padding: 1.5rem 0 .5rem;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: visible;
+    }
+    .punch-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(.4rem, 3vw, 1.2rem);
+      font-size: clamp(2.8rem, 12vw, 5rem);
+      line-height: 1;
+      opacity: 0;
+      filter: brightness(0);
+      animation: punch-fade-in 1.2s ease-out forwards;
+      will-change: transform, opacity, filter;
+    }
+    .punch-fist, .punch-man {
+      display: inline-block;
+      transform-origin: center center;
+    }
+    .punch-viking {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      image-rendering: auto;
+      filter: drop-shadow(0 0 8px rgba(57,255,20,.25));
+      pointer-events: none;
+      user-select: none;
+    }
+    .blondeness-control {
+      width: min(320px, 92%);
+      margin: .85rem auto 0;
+      padding: .7rem .85rem .85rem;
+      background: var(--panel);
+      border: 3px solid var(--line);
+      box-shadow: 3px 3px 0 #000;
+      text-align: left;
+      opacity: 0;
+      animation: punch-fade-in 1.2s ease-out .5s forwards;
+    }
+    .blondeness-control label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .75rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .42rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--toxic);
+      margin-bottom: .55rem;
+    }
+    .blondeness-control label span { color: var(--blood-bright); }
+    .blondeness-control input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      background:
+        linear-gradient(90deg, #1a1208 0%, #5a3a12 35%, #d4b45a 70%, #f5e6a0 100%);
+      border: 2px solid #000;
+      outline: none;
+      cursor: pointer;
+      image-rendering: pixelated;
+    }
+    .blondeness-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: var(--toxic);
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0 #000, 0 0 8px rgba(57,255,20,.45);
+      cursor: pointer;
+    }
+    .blondeness-control input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: var(--toxic);
+      border: 2px solid #000;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      border-radius: 0;
+    }
+    .punch-fist-left {
+      transform-origin: 30% 60%;
+      animation: punch-left 0.9s ease-in-out 1.2s infinite;
+    }
+    .punch-fist-right {
+      transform-origin: 70% 60%;
+      animation: punch-right 0.9s ease-in-out 1.65s infinite;
+    }
+    .punch-man {
+      position: relative;
+      width: clamp(3.2rem, 14vw, 5.6rem);
+      height: clamp(3.2rem, 14vw, 5.6rem);
+      animation: punch-recoil 0.9s ease-in-out 1.2s infinite;
+    }
+    .punch-caption {
+      margin: .55rem 0 0;
+      font-family: "Press Start 2P", monospace;
+      font-size: .45rem;
+      letter-spacing: .28em;
+      color: var(--toxic-dim);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: punch-fade-in 1.2s ease-out .4s forwards;
+    }
+
+    @keyframes punch-fade-in {
+      0%   { opacity: 0; filter: brightness(0); }
+      60%  { opacity: .7; filter: brightness(.4); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+    @keyframes punch-left {
+      0%, 100% { transform: scale(1) translateY(0); }
+      35%      { transform: scale(1.55) translateY(-6px) translateX(-4px); }
+      55%      { transform: scale(1) translateY(0); }
+    }
+    @keyframes punch-right {
+      0%, 100% { transform: scale(1) translateY(0); }
+      35%      { transform: scale(1.55) translateY(-6px) translateX(4px); }
+      55%      { transform: scale(1) translateY(0); }
+    }
+    @keyframes punch-recoil {
+      0%, 100% { transform: translateY(0) scale(1); }
+      18%      { transform: translateY(3px) scale(.97); }
+      35%      { transform: translateY(0) scale(1); }
+      55%      { transform: translateY(3px) scale(.97); }
+      72%      { transform: translateY(0) scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .punch-row, .punch-caption {
+        opacity: 1;
+        filter: none;
+        animation: none;
+      }
+      .punch-fist-left, .punch-fist-right, .punch-man {
+        animation: none;
+        transform: none;
+      }
+    }
+
+    /* ===== HERO ===== */
+    .hero { text-align: center; padding: .2rem .5rem .1rem; }
+    .eyebrow, h1, h2, h3, button, .label, .badge, .section-kicker {
+      font-family: "Press Start 2P", monospace;
+    }
+    .eyebrow {
+      margin: 0 0 .6rem;
+      color: var(--blood-bright);
+      font-size: .5rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(196,20,20,.6);
+    }
+    h1 {
+      margin: 0;
+      color: var(--toxic);
+      font-size: clamp(.85rem, 3.8vw, 1.55rem);
+      line-height: 1.35;
+      letter-spacing: .06em;
+      text-shadow:
+        2px 2px 0 #0a1a05,
+        0 0 12px rgba(57,255,20,.45),
+        0 0 28px rgba(57,255,20,.2);
+    }
+    .subtitle {
+      max-width: 540px;
+      margin: .9rem auto 0;
+      color: var(--ash);
+      font-size: 1.25rem;
+      line-height: 1.3;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      max-width: 360px;
+      margin: .9rem auto 0;
+      color: var(--blood);
+    }
+    .divider::before, .divider::after {
+      content: "";
+      height: 2px;
+      flex: 1;
+      background: repeating-linear-gradient(90deg, var(--blood) 0 6px, transparent 6px 10px);
+    }
+    .divider span { font-family: "Press Start 2P", monospace; font-size: .4rem; }
+
+    /* ===== CARDS — hard pixel edges, no glass ===== */
+    .card {
+      position: relative;
+      padding: 1.4rem clamp(1rem, 4vw, 2rem);
+      background: var(--panel);
+      border: 3px solid var(--line);
+      box-shadow:
+        inset 0 0 0 1px #162016,
+        4px 4px 0 #000,
+        0 0 0 1px #000;
+      image-rendering: pixelated;
+    }
+    .card::before, .card::after {
+      content: "";
+      position: absolute;
+      width: 8px; height: 8px;
+      background: var(--blood);
+      pointer-events: none;
+      image-rendering: pixelated;
+    }
+    .card::before { top: -3px; left: -3px; }
+    .card::after  { bottom: -3px; right: -3px; }
+    .code-card {
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(196,20,20,.04) 7px, rgba(196,20,20,.04) 8px),
+        var(--panel);
+      border-color: var(--blood);
+      box-shadow:
+        inset 0 0 0 1px #3a1010,
+        4px 4px 0 #000,
+        0 0 18px rgba(196,20,20,.25);
+    }
+
+    .code-wrap { text-align: center; padding: .5rem .3rem .1rem; }
+    .gate-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .65rem;
+      color: var(--blood-bright);
+    }
+    .gate-label::before, .gate-label::after {
+      content: "■";
+      font-size: .45rem;
+      color: var(--toxic);
+    }
+    .label {
+      margin-bottom: .7rem;
+      color: var(--ash);
+      font-size: .5rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    #join-code {
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(1.6rem, 9vw, 3.6rem);
+      letter-spacing: .18em;
+      line-height: 1.2;
+      color: var(--blood-bright);
+      text-indent: .18em;
+      text-shadow:
+        3px 3px 0 #2a0505,
+        0 0 8px rgba(255,26,26,.9),
+        0 0 20px rgba(196,20,20,.55),
+        0 0 40px rgba(196,20,20,.3);
+      user-select: all;
+      word-break: break-all;
+      image-rendering: pixelated;
+    }
+    .code-caption {
+      margin: .7rem 0 0;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      justify-content: center;
+      margin-top: 1.15rem;
+    }
+    button {
+      appearance: none;
+      border: 3px solid var(--toxic);
+      border-radius: 0;
+      padding: .75rem 1.2rem;
+      color: #050605;
+      background: var(--toxic);
+      box-shadow: 3px 3px 0 #000, inset -2px -2px 0 rgba(0,0,0,.25);
+      font-size: .55rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: none;
+      image-rendering: pixelated;
+    }
+    button:hover {
+      color: var(--toxic);
+      background: #050605;
+      border-color: var(--toxic);
+      box-shadow: 3px 3px 0 var(--toxic-dim), inset 0 0 0 1px var(--toxic);
+    }
+    button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #000;
+    }
+    button.copied {
+      color: #fff;
+      background: var(--blood);
+      border-color: var(--blood-bright);
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .meta {
+      display: grid;
+      gap: .5rem;
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 2px dashed var(--line);
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+    .meta strong { color: var(--text); font-weight: 400; }
+    .address {
+      color: var(--toxic);
+      font-family: "Press Start 2P", monospace;
+      font-size: .55em;
+      letter-spacing: .04em;
+      word-break: break-all;
+    }
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem .85rem;
+      align-items: center;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      border-radius: 0;
+      padding: .28rem .55rem;
+      font-size: .42rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border: 2px solid currentColor;
+      background: #050605;
+    }
+    .badge::before {
+      content: "";
+      width: .4rem; height: .4rem;
+      border-radius: 0;
+      background: currentColor;
+      box-shadow: 0 0 6px currentColor;
+      image-rendering: pixelated;
+    }
+    .badge.ok { color: var(--ok); }
+    .badge.pending { color: var(--warn); }
+    .badge.error, .badge.stale { color: var(--err); }
+
+    .note {
+      margin: .8rem 0 0;
+      padding: .65rem .8rem;
+      color: var(--warn);
+      background: #121008;
+      border: 2px solid var(--warn);
+      font-size: 1.05rem;
+      display: none;
+    }
+    .note.visible { display: block; }
+
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: .6rem .9rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      margin: 0;
+      color: var(--toxic);
+      font-size: clamp(.65rem, 2.5vw, .85rem);
+      letter-spacing: .04em;
+      text-shadow: 2px 2px 0 #0a1a05;
+    }
+    .section-kicker {
+      color: var(--blood-bright);
+      font-size: .4rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .platforms {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+    }
+    .platform {
+      padding: .95rem .9rem 1rem;
+      background: #080a08;
+      border: 2px solid var(--line);
+      border-top: 3px solid var(--blood);
+      box-shadow: 2px 2px 0 #000;
+    }
+    .platform h3 {
+      margin: 0 0 .55rem;
+      color: var(--blood-bright);
+      font-size: .55rem;
+      letter-spacing: .04em;
+    }
+    ol, ul {
+      margin: 0;
+      padding-left: 1.15rem;
+      color: var(--ash);
+      line-height: 1.35;
+      font-size: 1.05rem;
+    }
+    li + li { margin-top: .35rem; }
+    li strong { color: var(--text); font-weight: 400; }
+    .notes-list { columns: 2; column-gap: 2rem; }
+    .notes-list li { break-inside: avoid; }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-family: "Press Start 2P", monospace;
+      font-size: .4rem;
+      letter-spacing: .1em;
+      margin-top: -.1rem;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 700px) {
+      body { padding-top: 1rem; }
+      .platforms { grid-template-columns: 1fr; }
+      .notes-list { columns: 1; }
+      .punch-stage { min-height: 110px; padding-top: 1rem; }
+    }
+    @media (max-width: 430px) {
+      .status-row { display: grid; }
+      #join-code { letter-spacing: .1em; text-indent: .1em; }
+      button { font-size: .48rem; padding: .7rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="punch-stage" aria-hidden="true">
+      <div class="punch-row">
+        <span class="punch-fist punch-fist-left">👊</span>
+        <span class="punch-man" id="punch-man">
+          <canvas class="punch-viking" id="viking-canvas" aria-label="Woods Viking" draggable="false"></canvas>
+        </span>
+        <span class="punch-fist punch-fist-right">👊</span>
+      </div>
+      <p class="punch-caption">WOODS VIKING</p>
+      <div class="blondeness-control">
+        <label for="blondeness">Blondeness <span id="blondeness-val">100%</span></label>
+        <input type="range" id="blondeness" min="0" max="100" value="100" step="1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" aria-label="Blondeness" />
+      </div>
+    </div>
+
+    <header class="hero">
+      <p class="eyebrow">Valheim // Crossplay</p>
+      <h1>VALHEIM // JOIN CODE</h1>
+      <p class="subtitle">Rip the code. Tear into the woods. PS5 · Xbox · Steam.</p>
+      <div class="divider" aria-hidden="true"><span>■</span></div>
+    </header>
+
+    <section class="card code-card" aria-labelledby="code-title">
+      <div class="code-wrap">
+        <div id="code-title" class="label gate-label">Current join code</div>
+        <div id="join-code" aria-live="polite">------</div>
+        <p class="code-caption">Live pass for warriors on PS5, Xbox, and Steam.</p>
+        <div class="actions">
+          <button type="button" id="copy-btn" aria-label="Copy join code">RIP AND TEAR THE CODE</button>
+        </div>
+      </div>
+      <div class="meta">
+        <div>Server address: <span class="address" id="server-address">136.175.187.100:27049</span></div>
+        <div class="status-row">
+          <span class="badge pending" id="status-badge">pending</span>
+          <span>Updated: <strong id="updated-at">never</strong></span>
+          <span>· Last check: <strong id="last-check">never</strong></span>
+        </div>
+      </div>
+      <p class="note" id="stale-note">This code may be stale — the watcher has not refreshed recently. Ask the host if joining fails.</p>
+      <p class="note" id="error-note"></p>
+    </section>
+
+    <section class="card" aria-labelledby="join-title">
+      <div class="section-heading"><h2 id="join-title">ENTER THE WOODS</h2><span class="section-kicker">Three paths · one world</span></div>
+      <div class="platforms">
+        <div class="platform">
+          <h3>PlayStation 5</h3>
+          <ol>
+            <li>Open <strong>Valheim</strong> and go to the main menu.</li>
+            <li>Choose <strong>Join Game</strong> → <strong>Join with code</strong> (crossplay).</li>
+            <li>Enter the <strong>6-digit join code</strong> shown above.</li>
+            <li>Confirm and load in. Crossplay must be enabled on your character/world join path.</li>
+          </ol>
+        </div>
+        <div class="platform">
+          <h3>Xbox</h3>
+          <ol>
+            <li>Launch <strong>Valheim</strong>.</li>
+            <li>Select <strong>Join Game</strong> / <strong>Join with code</strong>.</li>
+            <li>Type the join code from this page and connect.</li>
+          </ol>
+        </div>
+        <div class="platform">
+          <h3>Steam · PC</h3>
+          <ol>
+            <li>Start Valheim → <strong>Start</strong> → <strong>Join Game</strong>.</li>
+            <li>Use <strong>Join code</strong> (crossplay) and paste the code above.</li>
+            <li>Or add the server via IP: <span class="address">136.175.187.100:27049</span> if you have the server password from the host.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading"><h2>KNOW BEFORE YOU ENTER</h2><span class="section-kicker">System notes</span></div>
+      <ul class="notes-list">
+        <li>This page only shows the <strong>public join code</strong> and server address — never the server password.</li>
+        <li>Codes rotate when the dedicated server restarts; refresh this page if joining fails.</li>
+        <li>Page auto-refreshes the code every 30 seconds.</li>
+      </ul>
+    </section>
+
+    <footer>Rip and tear · Valheim crossplay join code</footer>
+  </main>
+
+  <script>
+    const STALE_MS = 15 * 60 * 1000; // 15 minutes
+    const COPY_LABEL = 'RIP AND TEAR THE CODE';
+    const els = {
+      code: document.getElementById('join-code'),
+      address: document.getElementById('server-address'),
+      badge: document.getElementById('status-badge'),
+      updated: document.getElementById('updated-at'),
+      lastCheck: document.getElementById('last-check'),
+      stale: document.getElementById('stale-note'),
+      error: document.getElementById('error-note'),
+      copy: document.getElementById('copy-btn'),
+    };
+
+    function fmt(iso) {
+      if (!iso) return 'never';
+      try {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return 'never';
+        return d.toLocaleString(undefined, {
+          month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit'
+        });
+      } catch { return 'never'; }
+    }
+
+    function setBadge(status, stale) {
+      let label = status || 'pending';
+      let cls = 'pending';
+      if (stale) { label = 'stale'; cls = 'stale'; }
+      else if (status === 'ok') cls = 'ok';
+      else if (status === 'error') cls = 'error';
+      else if (status === 'pending') cls = 'pending';
+      els.badge.className = 'badge ' + cls;
+      els.badge.textContent = label;
+    }
+
+    async function refresh() {
+      try {
+        const res = await fetch('code.json?_=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        els.code.textContent = data.code || '------';
+        if (data.address) els.address.textContent = data.address;
+        els.updated.textContent = fmt(data.updatedAt);
+        els.lastCheck.textContent = fmt(data.lastCheckAt);
+
+        const checkTs = data.lastCheckAt ? new Date(data.lastCheckAt).getTime() : 0;
+        const stale = !checkTs || (Date.now() - checkTs > STALE_MS);
+        setBadge(data.status, stale && data.status !== 'pending');
+        els.stale.classList.toggle('visible', stale && data.status !== 'pending');
+
+        if (data.status === 'error' && data.lastError) {
+          els.error.textContent = 'Watcher error: ' + data.lastError;
+          els.error.classList.add('visible');
+        } else {
+          els.error.classList.remove('visible');
+          els.error.textContent = '';
+        }
+      } catch (e) {
+        setBadge('error', false);
+        els.error.textContent = 'Could not load code.json — try refreshing.';
+        els.error.classList.add('visible');
+      }
+    }
+
+    els.copy.addEventListener('click', async () => {
+      const text = els.code.textContent.trim();
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      els.copy.textContent = 'Copied!';
+      els.copy.classList.add('copied');
+      setTimeout(() => {
+        els.copy.textContent = COPY_LABEL;
+        els.copy.classList.remove('copied');
+      }, 1600);
+    });
+
+    const blondRange = document.getElementById('blondeness');
+    const blondVal = document.getElementById('blondeness-val');
+    const vikingCanvas = document.getElementById('viking-canvas');
+    let baseImageData = null;
+    let pendingBlondeness = 100;
+    let redrawFrame = 0;
+
+    // Keep the source art intact and recolor only its blonde hair/beard and blue eyes.
+    function isBlueEye(r, g, b) {
+      return b > 75 && b > r * 1.22 && b > g * 1.08 && b - r > 24 && b - g > 10;
+    }
+
+    function isBlondeHair(r, g, b) {
+      const golden = r > 85 && g > 55 && r > b * 1.45 && g > b * 1.18;
+      const skinPink = r > 140 && r > g * 1.12 && g > b * 1.12 && b > g * .55;
+      return golden && !skinPink;
+    }
+
+    function scheduleVikingRedraw() {
+      if (!baseImageData || !vikingCanvas || redrawFrame) return;
+      redrawFrame = requestAnimationFrame(() => {
+        redrawFrame = 0;
+        redrawViking(pendingBlondeness);
+      });
+    }
+
+    function redrawViking(pct) {
+      if (!baseImageData || !vikingCanvas) return;
+      const ctx = vikingCanvas.getContext('2d');
+      const pixels = new Uint8ClampedArray(baseImageData.data);
+      const t = Math.max(0, Math.min(1, Number(pct) / 100));
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        if (pixels[i + 3] === 0) continue;
+
+        if (isBlueEye(r, g, b)) {
+          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+          const shade = 0.48 + luminance * 0.58;
+          const brown = [92 * shade, 55 * shade, 28 * shade];
+          pixels[i] = r * t + brown[0] * (1 - t);
+          pixels[i + 1] = g * t + brown[1] * (1 - t);
+          pixels[i + 2] = b * t + brown[2] * (1 - t);
+        } else if (isBlondeHair(r, g, b)) {
+          const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+          const shade = 0.35 + luminance * 0.75;
+          const darkHair = [25 * shade, 18 * shade, 12 * shade];
+          pixels[i] = r * t + darkHair[0] * (1 - t);
+          pixels[i + 1] = g * t + darkHair[1] * (1 - t);
+          pixels[i + 2] = b * t + darkHair[2] * (1 - t);
+        }
+      }
+      ctx.putImageData(new ImageData(pixels, baseImageData.width, baseImageData.height), 0, 0);
+    }
+
+    function loadVikingCanvas() {
+      if (!vikingCanvas) return;
+      const source = new Image();
+      source.onload = () => {
+        vikingCanvas.width = source.naturalWidth;
+        vikingCanvas.height = source.naturalHeight;
+        const offscreen = document.createElement('canvas');
+        offscreen.width = source.naturalWidth;
+        offscreen.height = source.naturalHeight;
+        const offscreenContext = offscreen.getContext('2d', { willReadFrequently: true });
+        offscreenContext.drawImage(source, 0, 0);
+        baseImageData = offscreenContext.getImageData(0, 0, offscreen.width, offscreen.height);
+        redrawViking(pendingBlondeness);
+      };
+      source.src = 'woods-viking.png';
+    }
+
+    function setBlondeness(pct) {
+      const n = Math.max(0, Math.min(100, Number(pct)));
+      pendingBlondeness = n;
+      if (blondVal) blondVal.textContent = n + '%';
+      if (blondRange) {
+        blondRange.value = String(n);
+        blondRange.setAttribute('aria-valuenow', String(n));
+      }
+      scheduleVikingRedraw();
+      try { localStorage.setItem('valheim-blondeness', String(n)); } catch (e) {}
+    }
+
+    if (blondRange) {
+      let saved = 100;
+      try {
+        const raw = localStorage.getItem('valheim-blondeness');
+        if (raw != null && raw !== '') saved = Number(raw);
+      } catch (e) {}
+      if (!Number.isFinite(saved)) saved = 100;
+      setBlondeness(saved);
+      blondRange.addEventListener('input', () => setBlondeness(blondRange.value));
+    }
+    loadVikingCanvas();
+
+    refresh();
+    setInterval(refresh, 30000);
+  </script>
+</body>
+</html>
