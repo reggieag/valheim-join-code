@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-27T01:50:00.987Z",
+  "updatedAt": "2026-09-27T01:50:02.700Z",
   "games": {
     "woods-brawl": {
       "unit": "streak",
@@ -15,7 +15,13 @@
     "fjord-fishing": {
       "unit": "catches",
       "higherIsBetter": true,
-      "top": []
+      "top": [
+        {
+          "name": "Piao liang",
+          "score": 1,
+          "at": "2026-09-27T01:50:02.700Z"
+        }
+      ]
     },
     "fjord-fishing-time": {
       "unit": "ms",
