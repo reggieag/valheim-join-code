@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-27T01:50:05.993Z",
+  "updatedAt": "2026-09-27T01:50:08.173Z",
   "games": {
     "woods-brawl": {
       "unit": "streak",
@@ -48,7 +48,13 @@
     "lobster-claw-streak": {
       "unit": "streak",
       "higherIsBetter": true,
-      "top": []
+      "top": [
+        {
+          "name": "Piao liang",
+          "score": 1,
+          "at": "2026-09-27T01:50:08.173Z"
+        }
+      ]
     }
   }
 }
