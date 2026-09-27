@@ -1198,7 +1198,7 @@
         arena.classList.add('is-busy');
         clearInterval(boarTimer);
         boarTimer = null;
-        resultEl.textContent = won ? 'VICTORY!' : 'YOU FELL';
+        resultEl.textContent = won ? 'you have reached Valhalla!' : 'YOU FELL';
         resultEl.className = 'fight-result ' + (won ? 'win' : 'lose');
         overlay.classList.add('visible');
         punchBtn.disabled = true;
