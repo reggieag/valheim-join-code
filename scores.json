@@ -1,0 +1,36 @@
+{
+  "updatedAt": "2026-09-27T01:44:11.968Z",
+  "games": {
+    "woods-brawl": {
+      "unit": "streak",
+      "higherIsBetter": true,
+      "top": [
+        {
+          "name": "Reggie",
+          "score": 3,
+          "at": "2026-09-27T01:44:11.968Z"
+        }
+      ]
+    },
+    "fjord-fishing": {
+      "unit": "catches",
+      "higherIsBetter": true,
+      "top": []
+    },
+    "fjord-fishing-time": {
+      "unit": "ms",
+      "higherIsBetter": false,
+      "top": []
+    },
+    "lobster-claw": {
+      "unit": "grabs",
+      "higherIsBetter": true,
+      "top": []
+    },
+    "lobster-claw-streak": {
+      "unit": "streak",
+      "higherIsBetter": true,
+      "top": []
+    }
+  }
+}
