@@ -1239,6 +1239,138 @@
       .claw-controls button { min-width: 90px; }
     }
 
+
+    /* ===== TOP SCORES / PERSONAL BESTS ===== */
+    .scores-card { overflow: hidden; }
+    .scores-card .section-heading { margin-bottom: .85rem; }
+    .scores-name-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .65rem;
+      margin-bottom: .85rem;
+      padding: .55rem .7rem;
+      border: 2px solid var(--line);
+      background: rgba(0,0,0,.25);
+      box-shadow: inset 0 0 0 1px #162016;
+    }
+    .scores-name-row .scores-name-label {
+      font-family: "Press Start 2P", monospace;
+      font-size: .42rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--toxic);
+    }
+    .scores-name-row .scores-name-value {
+      color: var(--blood-bright);
+      font-size: 1.15rem;
+      letter-spacing: .06em;
+    }
+    .scores-name-row button {
+      min-width: 0;
+      padding: .45rem .7rem;
+      font-size: .4rem;
+    }
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+    }
+    @media (max-width: 700px) {
+      .scores-grid { grid-template-columns: 1fr; }
+    }
+    .scores-col {
+      border: 2px solid #1a2a14;
+      background: rgba(0,0,0,.28);
+      box-shadow: inset 0 0 0 1px #0a1208, 2px 2px 0 #000;
+      padding: .65rem .7rem .75rem;
+      min-height: 8.5rem;
+    }
+    .scores-col h3 {
+      margin: 0 0 .55rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .45rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--blood-bright);
+      text-shadow: 1px 1px 0 #000;
+    }
+    .scores-col .scores-unit {
+      display: block;
+      margin: -.25rem 0 .5rem;
+      color: var(--muted);
+      font-size: .95rem;
+      letter-spacing: .04em;
+    }
+    .scores-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: .28rem;
+    }
+    .scores-list li {
+      display: grid;
+      grid-template-columns: 1.4rem 1fr auto;
+      gap: .4rem;
+      align-items: baseline;
+      color: var(--text);
+      font-size: 1.05rem;
+      line-height: 1.25;
+    }
+    .scores-list .rank {
+      color: var(--toxic-dim);
+      font-family: "Press Start 2P", monospace;
+      font-size: .38rem;
+      letter-spacing: .04em;
+    }
+    .scores-list .pname {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--ash);
+    }
+    .scores-list .pval {
+      color: var(--toxic);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .04em;
+    }
+    .scores-list .scores-empty {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      font-size: 1rem;
+      letter-spacing: .04em;
+    }
+    .scores-meta {
+      margin: .75rem 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+      letter-spacing: .04em;
+      text-align: center;
+    }
+    .scores-meta strong { color: var(--ash); }
+
+    .pb-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .45rem .85rem;
+      margin: 0 0 .85rem;
+      padding: .45rem .6rem;
+      border: 2px dashed #2a3a22;
+      background: rgba(0,0,0,.2);
+      font-size: 1.05rem;
+      letter-spacing: .05em;
+      color: var(--ash);
+      text-align: center;
+    }
+    .pb-row span strong {
+      color: var(--toxic);
+      font-weight: normal;
+    }
+    .pb-row .pb-sep { color: var(--muted); }
+
   </style>
 </head>
 <body>
@@ -1287,12 +1419,54 @@
     </section>
 
 
+
+    <section class="card scores-card" aria-labelledby="scores-title">
+      <div class="section-heading">
+        <h2 id="scores-title">TOP SCORES</h2>
+        <span class="section-kicker">Shared records · local bests</span>
+      </div>
+      <div class="scores-name-row">
+        <div>
+          <div class="scores-name-label">Warrior name</div>
+          <div class="scores-name-value" id="player-name-display">—</div>
+        </div>
+        <button type="button" class="secondary" id="player-name-btn" aria-label="Set display name">SET NAME</button>
+      </div>
+      <div class="scores-grid" id="scores-grid" aria-live="polite">
+        <div class="scores-col" data-game="woods-brawl">
+          <h3>Woods Brawl</h3>
+          <span class="scores-unit">best streak</span>
+          <ol class="scores-list" id="board-woods-brawl"><li class="scores-empty">No records yet</li></ol>
+        </div>
+        <div class="scores-col" data-game="fjord-fishing">
+          <h3>Fjord Fishing</h3>
+          <span class="scores-unit">most catches</span>
+          <ol class="scores-list" id="board-fjord-fishing"><li class="scores-empty">No records yet</li></ol>
+        </div>
+        <div class="scores-col" data-game="lobster-claw">
+          <h3>Lobster Claw</h3>
+          <span class="scores-unit">most grabs</span>
+          <ol class="scores-list" id="board-lobster-claw"><li class="scores-empty">No records yet</li></ol>
+        </div>
+      </div>
+      <p class="scores-meta">Board updated: <strong id="scores-updated">never</strong> · API: <strong id="scores-api-status">local</strong></p>
+    </section>
+
     <section class="card fight-card" aria-labelledby="fight-title">
       <div class="section-heading">
         <h2 id="fight-title">WOODS BRAWL</h2>
         <span class="section-kicker">Tap to punch · boar bites back</span>
       </div>
       <p class="fight-hint">Tap the arena or hit PUNCH. Drop the boar before it flatlines you.</p>
+      <div class="pb-row" id="pb-woods-brawl" aria-label="Woods Brawl personal bests">
+        <span>W <strong id="pb-brawl-wins">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>L <strong id="pb-brawl-losses">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Streak <strong id="pb-brawl-streak">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Best <strong id="pb-brawl-best">0</strong></span>
+      </div>
       <div
         class="fight-arena"
         id="fight-arena"
@@ -1359,6 +1533,11 @@
         <span class="section-kicker">Hold to reel · Stardew-style</span>
       </div>
       <p class="fish-hint">Cast, wait for the bite, then keep Spite Fish inside the green bar. Hold SPACE / HOLD / tap the track.</p>
+      <div class="pb-row" id="pb-fjord-fishing" aria-label="Fjord Fishing personal bests">
+        <span>Catches <strong id="pb-fish-catches">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Best time <strong id="pb-fish-best">—</strong></span>
+      </div>
       <div class="fish-arena" id="fish-arena" aria-label="Fjord Fishing — catch Spite Fish">
         <div class="fish-play" id="fish-play" hidden>
           <div class="fish-track-wrap">
@@ -1406,6 +1585,13 @@
         <span class="section-kicker">Aim · Drop · Claim the catch</span>
       </div>
       <p class="claw-hint">Slide the claw over the lobster, then DROP. Tap arrows or hold ← →. Touch-friendly.</p>
+      <div class="pb-row" id="pb-lobster-claw" aria-label="Lobster Claw personal bests">
+        <span>Grabs <strong id="pb-claw-grabs">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Streak <strong id="pb-claw-streak">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Best <strong id="pb-claw-best">0</strong></span>
+      </div>
       <div class="claw-arena" id="claw-arena" aria-label="Lobster claw mini-game">
         <div class="claw-playfield" id="claw-playfield" role="application" tabindex="0" aria-label="Claw machine. Move left and right, then drop to grab the lobster.">
           <div class="claw-rail" aria-hidden="true"></div>
@@ -1496,6 +1682,7 @@
         <li>This page only shows the <strong>public join code</strong> and server address — never the server password.</li>
         <li>Codes rotate when the dedicated server restarts; refresh this page if joining fails.</li>
         <li>Page auto-refreshes the code every 30 seconds.</li>
+        <li>Top scores sync from <strong>scores.json</strong>; personal bests stay in your browser. Shared submits need the host scores API.</li>
       </ul>
     </section>
 
@@ -1687,6 +1874,271 @@
 
     refresh();
     setInterval(refresh, 30000);
+    ScoreBoard.start();
+
+
+    /* ===== Shared scoreboard (localStorage + scores.json + optional API) ===== */
+    const ScoreBoard = (function () {
+      const LS_NAME = 'valheim-player-name';
+      const LS_STATS = 'valheim-game-stats';
+      const POLL_MS = 45000;
+      const GAME_META = {
+        'woods-brawl': { listId: 'board-woods-brawl', unit: 'streak', higherIsBetter: true, fmt: (n) => String(n) },
+        'fjord-fishing': { listId: 'board-fjord-fishing', unit: 'catches', higherIsBetter: true, fmt: (n) => String(n) },
+        'lobster-claw': { listId: 'board-lobster-claw', unit: 'grabs', higherIsBetter: true, fmt: (n) => String(n) },
+      };
+
+      let scoresApiUrl = '';
+      let shared = null;
+      let stats = loadStats();
+
+      function defaultStats() {
+        return {
+          woodsBrawl: { wins: 0, losses: 0, streak: 0, bestStreak: 0 },
+          fjordFishing: { catches: 0, bestMs: null },
+          lobsterClaw: { grabs: 0, streak: 0, bestStreak: 0 },
+        };
+      }
+
+      function loadStats() {
+        try {
+          const raw = localStorage.getItem(LS_STATS);
+          if (!raw) return defaultStats();
+          const parsed = JSON.parse(raw);
+          const d = defaultStats();
+          return {
+            woodsBrawl: Object.assign(d.woodsBrawl, parsed.woodsBrawl || {}),
+            fjordFishing: Object.assign(d.fjordFishing, parsed.fjordFishing || {}),
+            lobsterClaw: Object.assign(d.lobsterClaw, parsed.lobsterClaw || {}),
+          };
+        } catch (e) {
+          return defaultStats();
+        }
+      }
+
+      function saveStats() {
+        try { localStorage.setItem(LS_STATS, JSON.stringify(stats)); } catch (e) {}
+        renderPersonal();
+      }
+
+      function getName() {
+        try { return (localStorage.getItem(LS_NAME) || '').trim(); } catch (e) { return ''; }
+      }
+
+      function setName(name) {
+        const cleaned = String(name || '').trim().replace(/\s+/g, ' ').slice(0, 12);
+        if (!cleaned) return false;
+        try { localStorage.setItem(LS_NAME, cleaned); } catch (e) {}
+        const el = document.getElementById('player-name-display');
+        if (el) el.textContent = cleaned;
+        return true;
+      }
+
+      function ensureName() {
+        let n = getName();
+        if (n) {
+          const el = document.getElementById('player-name-display');
+          if (el) el.textContent = n;
+          return n;
+        }
+        const prompted = window.prompt('Warrior name for the shared board (max 12 chars):', 'Viking');
+        if (prompted == null) return '';
+        if (!setName(prompted)) {
+          setName('Viking');
+        }
+        return getName();
+      }
+
+      function fmtMs(ms) {
+        if (ms == null || !Number.isFinite(ms)) return '—';
+        const s = ms / 1000;
+        return s.toFixed(s >= 10 ? 1 : 2) + 's';
+      }
+
+      function renderPersonal() {
+        const b = stats.woodsBrawl;
+        const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = String(v); };
+        set('pb-brawl-wins', b.wins);
+        set('pb-brawl-losses', b.losses);
+        set('pb-brawl-streak', b.streak);
+        set('pb-brawl-best', b.bestStreak);
+        set('pb-fish-catches', stats.fjordFishing.catches);
+        const bestEl = document.getElementById('pb-fish-best');
+        if (bestEl) bestEl.textContent = fmtMs(stats.fjordFishing.bestMs);
+        set('pb-claw-grabs', stats.lobsterClaw.grabs);
+        set('pb-claw-streak', stats.lobsterClaw.streak);
+        set('pb-claw-best', stats.lobsterClaw.bestStreak);
+      }
+
+      function renderBoardList(gameId, entries) {
+        const meta = GAME_META[gameId];
+        if (!meta) return;
+        const ol = document.getElementById(meta.listId);
+        if (!ol) return;
+        const top = Array.isArray(entries) ? entries.slice(0, 10) : [];
+        if (!top.length) {
+          ol.innerHTML = '<li class="scores-empty">No records yet</li>';
+          return;
+        }
+        ol.innerHTML = top.map((e, i) => {
+          const name = String(e.name || 'Viking').slice(0, 12);
+          const score = meta.fmt(Number(e.score) || 0);
+          return '<li><span class="rank">' + (i + 1) + '</span><span class="pname">' +
+            name.replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])) +
+            '</span><span class="pval">' + score + '</span></li>';
+        }).join('');
+      }
+
+      function applyShared(data) {
+        shared = data;
+        const games = (data && data.games) || {};
+        Object.keys(GAME_META).forEach((gid) => {
+          const g = games[gid] || {};
+          renderBoardList(gid, g.top || []);
+        });
+        const upd = document.getElementById('scores-updated');
+        if (upd) {
+          try {
+            const d = data && data.updatedAt ? new Date(data.updatedAt) : null;
+            upd.textContent = d && !Number.isNaN(d.getTime())
+              ? d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+              : 'never';
+          } catch (e) { upd.textContent = 'never'; }
+        }
+      }
+
+      async function fetchShared() {
+        try {
+          const res = await fetch('scores.json?_=' + Date.now(), { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          applyShared(await res.json());
+        } catch (e) {
+          /* keep last */
+        }
+      }
+
+      async function loadConfig() {
+        try {
+          const res = await fetch('config.json?_=' + Date.now(), { cache: 'no-store' });
+          if (!res.ok) return;
+          const cfg = await res.json();
+          if (cfg && typeof cfg.scoresApiUrl === 'string') {
+            scoresApiUrl = cfg.scoresApiUrl.replace(/\/$/, '');
+          }
+        } catch (e) {}
+        const st = document.getElementById('scores-api-status');
+        if (st) st.textContent = scoresApiUrl ? 'online' : 'local only';
+      }
+
+      async function submit(game, score) {
+        const name = ensureName();
+        if (!name || !scoresApiUrl) return false;
+        try {
+          const res = await fetch(scoresApiUrl + '/api/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ game, name, score: Math.floor(score) }),
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data && data.board) applyShared(data.board);
+          else fetchShared();
+          const st = document.getElementById('scores-api-status');
+          if (st) st.textContent = 'online';
+          return !!(data && data.changed);
+        } catch (e) {
+          const st = document.getElementById('scores-api-status');
+          if (st) st.textContent = 'unreachable';
+          return false;
+        }
+      }
+
+      function recordBrawl(won) {
+        const b = stats.woodsBrawl;
+        if (won) {
+          b.wins += 1;
+          b.streak += 1;
+          if (b.streak > b.bestStreak) {
+            b.bestStreak = b.streak;
+            saveStats();
+            submit('woods-brawl', b.bestStreak);
+            return;
+          }
+        } else {
+          b.losses += 1;
+          b.streak = 0;
+        }
+        saveStats();
+      }
+
+      function recordFish(won, durationMs) {
+        if (!won) { saveStats(); return; }
+        const f = stats.fjordFishing;
+        f.catches += 1;
+        let newCatches = true;
+        let newTime = false;
+        if (durationMs != null && Number.isFinite(durationMs) && durationMs > 0) {
+          if (f.bestMs == null || durationMs < f.bestMs) {
+            f.bestMs = Math.round(durationMs);
+            newTime = true;
+          }
+        }
+        saveStats();
+        submit('fjord-fishing', f.catches);
+        if (newTime) submit('fjord-fishing-time', f.bestMs);
+      }
+
+      function recordClaw(won) {
+        const c = stats.lobsterClaw;
+        if (won) {
+          c.grabs += 1;
+          c.streak += 1;
+          let bested = false;
+          if (c.streak > c.bestStreak) {
+            c.bestStreak = c.streak;
+            bested = true;
+          }
+          saveStats();
+          submit('lobster-claw', c.grabs);
+          if (bested) submit('lobster-claw-streak', c.bestStreak);
+        } else {
+          c.streak = 0;
+          saveStats();
+        }
+      }
+
+      function initUi() {
+        const n = getName();
+        const el = document.getElementById('player-name-display');
+        if (el) el.textContent = n || '—';
+        const btn = document.getElementById('player-name-btn');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            const cur = getName() || 'Viking';
+            const prompted = window.prompt('Warrior name (max 12 chars):', cur);
+            if (prompted == null) return;
+            setName(prompted) || setName(cur);
+          });
+        }
+        renderPersonal();
+      }
+
+      async function start() {
+        initUi();
+        await loadConfig();
+        await fetchShared();
+        setInterval(fetchShared, POLL_MS);
+      }
+
+      return {
+        start,
+        recordBrawl,
+        recordFish,
+        recordClaw,
+        ensureName,
+      };
+    })();
+
 
     /* ===== Woods Brawl mini-game ===== */
     (function initWoodsBrawl() {
@@ -1750,6 +2202,7 @@
         resultEl.className = 'fight-result ' + (won ? 'win' : 'lose');
         overlay.classList.add('visible');
         punchBtn.disabled = true;
+        try { ScoreBoard.recordBrawl(won); } catch (e) {}
       }
 
       function boarAttack() {
@@ -1881,6 +2334,7 @@
       if (!arena || !track || !barEl || !fishEl) return;
 
       let phase = 'idle'; // idle | waiting | playing | won | lost
+      let playStartedAt = 0;
       let holding = false;
       let progress = START_PROGRESS;
       let barY = 0;       // bottom of bar from track bottom, in px — actually top from top
@@ -1975,11 +2429,13 @@
         stopLoop();
         setHolding(false);
         holdBtn.disabled = true;
+        const dur = playStartedAt ? (performance.now() - playStartedAt) : null;
         if (won) {
           showOverlay(pick(WIN_LINES), 'win', 'CAST AGAIN');
         } else {
           showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
         }
+        try { ScoreBoard.recordFish(won, dur); } catch (e) {}
       }
 
       function retargetFish(now) {
@@ -2076,6 +2532,7 @@
       function startPlaying() {
         clearWait();
         phase = 'playing';
+        playStartedAt = performance.now();
         hideOverlay();
         holdBtn.disabled = false;
         measureTrack();
@@ -2339,6 +2796,7 @@
           setStatus('Missed — try again.', 'lose');
           showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
         }
+        try { ScoreBoard.recordClaw(won); } catch (e) {}
       }
 
       function beginDrop() {
