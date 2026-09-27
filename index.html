@@ -1371,17 +1371,238 @@
     }
     .pb-row .pb-sep { color: var(--muted); }
 
+
+    /* ===== THOR FORGE / KNUCKLES ===== */
+    .forge-card {
+      border-color: #3a4a18;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(57,255,20,.03) 7px, rgba(57,255,20,.03) 8px),
+        var(--panel);
+      box-shadow:
+        inset 0 0 0 1px #1a2810,
+        4px 4px 0 #000,
+        0 0 18px rgba(57,255,20,.12);
+    }
+    .forge-card.is-ready {
+      border-color: var(--toxic);
+      box-shadow:
+        inset 0 0 0 1px #1a2810,
+        4px 4px 0 #000,
+        0 0 22px rgba(57,255,20,.35);
+    }
+    .forge-card.is-forged {
+      border-color: var(--warn);
+      box-shadow:
+        inset 0 0 0 1px #3a3010,
+        4px 4px 0 #000,
+        0 0 22px rgba(232,196,26,.35);
+    }
+    .forge-card .section-heading { margin-bottom: .85rem; }
+    .forge-progress {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .6rem .9rem;
+      margin: 0 0 1rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .42rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ash);
+    }
+    .forge-progress strong {
+      color: var(--toxic);
+      font-weight: normal;
+    }
+    .forge-badge {
+      display: none;
+      padding: .35rem .55rem;
+      border: 2px solid var(--warn);
+      color: var(--warn);
+      background: #1a1608;
+      box-shadow: 2px 2px 0 #000;
+      font-size: .38rem;
+      letter-spacing: .1em;
+    }
+    .forge-card.is-forged .forge-badge { display: inline-block; }
+    .forge-checklist {
+      list-style: none;
+      margin: 0 0 1.1rem;
+      padding: 0;
+      display: grid;
+      gap: .55rem;
+    }
+    .forge-checklist li {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      padding: .55rem .7rem;
+      border: 2px solid var(--line);
+      background: #0a0e0a;
+      box-shadow: 2px 2px 0 #000;
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+    .forge-checklist li.done {
+      border-color: var(--toxic-dim);
+      color: var(--text);
+    }
+    .forge-check {
+      flex: 0 0 auto;
+      width: 1.35rem;
+      height: 1.35rem;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      background: #050605;
+      font-family: "Press Start 2P", monospace;
+      font-size: .45rem;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .forge-checklist li.done .forge-check {
+      border-color: var(--toxic);
+      color: var(--toxic);
+      text-shadow: 0 0 6px rgba(57,255,20,.6);
+    }
+    .forge-trial-name {
+      font-family: "Press Start 2P", monospace;
+      font-size: .42rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: inherit;
+    }
+    .forge-trial-hint {
+      margin-left: auto;
+      font-size: .95rem;
+      color: var(--muted);
+    }
+    .forge-checklist li.done .forge-trial-hint { color: var(--toxic-dim); }
+    .forge-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .7rem;
+      justify-content: center;
+      margin-top: .2rem;
+    }
+    #forge-btn {
+      min-width: min(100%, 280px);
+      border-color: var(--warn);
+      background: var(--warn);
+      color: #050605;
+      box-shadow: 3px 3px 0 #5a4808, 0 0 12px rgba(232,196,26,.25);
+    }
+    #forge-btn:hover:not(:disabled) {
+      filter: brightness(1.08);
+      box-shadow: 3px 3px 0 #000, 0 0 18px rgba(232,196,26,.45);
+    }
+    #forge-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      filter: grayscale(.4);
+      box-shadow: 3px 3px 0 #000;
+    }
+    .forge-status {
+      margin: .85rem 0 0;
+      text-align: center;
+      min-height: 1.4em;
+      font-family: "Press Start 2P", monospace;
+      font-size: .42rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .forge-status.ready { color: var(--toxic); }
+    .forge-status.forged {
+      color: var(--warn);
+      text-shadow: 0 0 8px rgba(232,196,26,.55);
+    }
+
+    /* Knuckle-clad fists in header */
+    .punch-fist {
+      position: relative;
+      width: 1em;
+      height: 1em;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .punch-fist .fist-emoji {
+      display: block;
+      line-height: 1;
+      transition: opacity .25s ease, filter .25s ease;
+    }
+    .punch-fist .fist-knuckle {
+      display: none;
+      width: 1em;
+      height: 1em;
+      line-height: 0;
+    }
+    .punch-fist .fist-knuckle svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+      filter:
+        drop-shadow(0 0 4px rgba(120,180,255,.55))
+        drop-shadow(0 0 8px rgba(232,196,26,.35));
+    }
+    body.knuckles-forged .punch-fist .fist-emoji { display: none; }
+    body.knuckles-forged .punch-fist .fist-knuckle { display: block; }
+    body.knuckles-forged .punch-caption {
+      color: var(--warn);
+      text-shadow: 0 0 8px rgba(232,196,26,.45);
+    }
+    body.knuckles-forged .punch-caption::after {
+      content: " · THOR KNUCKLES";
+      color: var(--toxic);
+    }
+
+    /* Lightning flash on craft */
+    .forge-flash {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 18%, rgba(180,210,255,.55), transparent 70%),
+        linear-gradient(180deg, rgba(232,196,26,.25), transparent 45%);
+    }
+    .forge-flash.burst {
+      animation: forge-lightning .7s ease-out forwards;
+    }
+    @keyframes forge-lightning {
+      0%   { opacity: 0; }
+      12%  { opacity: 1; }
+      28%  { opacity: .15; }
+      42%  { opacity: .85; }
+      100% { opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .forge-flash.burst { animation: none; opacity: 0; }
+      .blondeness-control { animation: none; opacity: 1; }
+    }
+
   </style>
 </head>
 <body>
+  <div class="forge-flash" id="forge-flash" aria-hidden="true"></div>
   <main>
     <div class="punch-stage" aria-hidden="true">
       <div class="punch-row">
-        <span class="punch-fist punch-fist-left">👊</span>
+        <span class="punch-fist punch-fist-left" id="punch-fist-left" title="Bare fists">
+          <span class="fist-emoji" aria-hidden="true">👊</span>
+          <span class="fist-knuckle" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="crispEdges"><rect x="8" y="22" width="48" height="28" fill="#6a727a"/><rect x="10" y="24" width="44" height="24" fill="#9aa3ad"/><rect x="12" y="14" width="10" height="16" fill="#c8d0d8"/><rect x="24" y="12" width="10" height="18" fill="#d4dce4"/><rect x="36" y="14" width="10" height="16" fill="#c8d0d8"/><rect x="48" y="16" width="8" height="14" fill="#b8c0c8"/><rect x="12" y="14" width="10" height="4" fill="#e8f0ff"/><rect x="24" y="12" width="10" height="4" fill="#fff6c8"/><rect x="36" y="14" width="10" height="4" fill="#e8f0ff"/><rect x="14" y="30" width="6" height="6" fill="#3a4048"/><rect x="26" y="28" width="6" height="6" fill="#3a4048"/><rect x="38" y="30" width="6" height="6" fill="#3a4048"/><rect x="20" y="40" width="24" height="6" fill="#e8c41a"/><rect x="22" y="42" width="20" height="2" fill="#fff6a0"/><path d="M30 6 L34 18 L28 18 Z" fill="#a8c8ff"/><path d="M32 2 L33 10 L31 10 Z" fill="#e8f0ff"/><rect x="8" y="48" width="48" height="4" fill="#4a525a"/></svg></span>
+        </span>
         <span class="punch-man" id="punch-man">
           <canvas class="punch-viking" id="viking-canvas" aria-label="Woods Viking" draggable="false"></canvas>
         </span>
-        <span class="punch-fist punch-fist-right">👊</span>
+        <span class="punch-fist punch-fist-right" id="punch-fist-right" title="Bare fists">
+          <span class="fist-emoji" aria-hidden="true">👊</span>
+          <span class="fist-knuckle" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="crispEdges"><g transform="scale(-1,1) translate(-64,0)"><rect x="8" y="22" width="48" height="28" fill="#6a727a"/><rect x="10" y="24" width="44" height="24" fill="#9aa3ad"/><rect x="12" y="14" width="10" height="16" fill="#c8d0d8"/><rect x="24" y="12" width="10" height="18" fill="#d4dce4"/><rect x="36" y="14" width="10" height="16" fill="#c8d0d8"/><rect x="48" y="16" width="8" height="14" fill="#b8c0c8"/><rect x="12" y="14" width="10" height="4" fill="#e8f0ff"/><rect x="24" y="12" width="10" height="4" fill="#fff6a0"/><rect x="36" y="14" width="10" height="4" fill="#e8f0ff"/><rect x="14" y="30" width="6" height="6" fill="#3a4048"/><rect x="26" y="28" width="6" height="6" fill="#3a4048"/><rect x="38" y="30" width="6" height="6" fill="#3a4048"/><rect x="20" y="40" width="24" height="6" fill="#e8c41a"/><rect x="22" y="42" width="20" height="2" fill="#fff6a0"/><path d="M30 6 L34 18 L28 18 Z" fill="#a8c8ff"/><path d="M32 2 L33 10 L31 10 Z" fill="#e8f0ff"/><rect x="8" y="48" width="48" height="4" fill="#4a525a"/></g></svg></span>
+        </span>
       </div>
       <p class="punch-caption">WOODS VIKING</p>
       <div class="blondeness-control">
@@ -1450,6 +1671,41 @@
         </div>
       </div>
       <p class="scores-meta">Board updated: <strong id="scores-updated">never</strong> · API: <strong id="scores-api-status">local</strong></p>
+    </section>
+
+
+    <section class="card forge-card" id="forge-card" aria-labelledby="forge-title">
+      <div class="section-heading">
+        <h2 id="forge-title">THOR FORGE</h2>
+        <span class="section-kicker">Beat the trials · craft the knuckles</span>
+      </div>
+      <div class="forge-progress">
+        <span>Trials: <strong id="forge-progress-count">0/3</strong> complete</span>
+        <span class="forge-badge" id="forge-badge" aria-live="polite">THOR KNUCKLES FORGED</span>
+      </div>
+      <ul class="forge-checklist" id="forge-checklist">
+        <li data-trial="woodsBrawl" id="forge-trial-brawl">
+          <span class="forge-check" aria-hidden="true">·</span>
+          <span class="forge-trial-name">Woods Brawl</span>
+          <span class="forge-trial-hint">win a fight</span>
+        </li>
+        <li data-trial="fjordFishing" id="forge-trial-fish">
+          <span class="forge-check" aria-hidden="true">·</span>
+          <span class="forge-trial-name">Fjord Fishing</span>
+          <span class="forge-trial-hint">catch Spite Fish</span>
+        </li>
+        <li data-trial="lobsterClaw" id="forge-trial-claw">
+          <span class="forge-check" aria-hidden="true">·</span>
+          <span class="forge-trial-name">Lobster Claw</span>
+          <span class="forge-trial-hint">grab the lobster</span>
+        </li>
+      </ul>
+      <div class="forge-actions">
+        <button type="button" id="forge-btn" disabled aria-describedby="forge-status">
+          FORGE THOR KNUCKLES
+        </button>
+      </div>
+      <p class="forge-status" id="forge-status">Clear all three trials to unlock the forge.</p>
     </section>
 
     <section class="card fight-card" aria-labelledby="fight-title">
@@ -2202,6 +2458,7 @@
         overlay.classList.add('visible');
         punchBtn.disabled = true;
         try { ScoreBoard.recordBrawl(won); } catch (e) {}
+        if (won) { try { ThorForge.markTrial('woodsBrawl'); } catch (e) {} }
       }
 
       function boarAttack() {
@@ -2435,6 +2692,7 @@
           showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
         }
         try { ScoreBoard.recordFish(won, dur); } catch (e) {}
+        if (won) { try { ThorForge.markTrial('fjordFishing'); } catch (e) {} }
       }
 
       function retargetFish(now) {
@@ -2796,6 +3054,7 @@
           showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
         }
         try { ScoreBoard.recordClaw(won); } catch (e) {}
+        if (won) { try { ThorForge.markTrial('lobsterClaw'); } catch (e) {} }
       }
 
       function beginDrop() {
@@ -2967,6 +3226,164 @@
 
 
   
+
+    /* ===== Thor Forge meta-progression ===== */
+    const ThorForge = (function () {
+      const LS_KEY = 'valheim-thor-forge';
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const TRIALS = [
+        { key: 'woodsBrawl', el: 'forge-trial-brawl', label: 'Woods Brawl' },
+        { key: 'fjordFishing', el: 'forge-trial-fish', label: 'Fjord Fishing' },
+        { key: 'lobsterClaw', el: 'forge-trial-claw', label: 'Lobster Claw' },
+      ];
+
+      function defaultState() {
+        return {
+          trials: { woodsBrawl: false, fjordFishing: false, lobsterClaw: false },
+          crafted: false,
+        };
+      }
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(LS_KEY);
+          if (!raw) return defaultState();
+          const parsed = JSON.parse(raw);
+          const d = defaultState();
+          d.crafted = !!parsed.crafted;
+          d.trials = Object.assign(d.trials, parsed.trials || {});
+          return d;
+        } catch (e) {
+          return defaultState();
+        }
+      }
+
+      function save() {
+        try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+      }
+
+      let state = load();
+
+      function seedFromStats() {
+        try {
+          const raw = localStorage.getItem('valheim-game-stats');
+          if (!raw) return;
+          const stats = JSON.parse(raw);
+          if (stats && stats.woodsBrawl && (stats.woodsBrawl.wins || 0) > 0) state.trials.woodsBrawl = true;
+          if (stats && stats.fjordFishing && (stats.fjordFishing.catches || 0) > 0) state.trials.fjordFishing = true;
+          if (stats && stats.lobsterClaw && (stats.lobsterClaw.grabs || 0) > 0) state.trials.lobsterClaw = true;
+          save();
+        } catch (e) {}
+      }
+
+      function completedCount() {
+        return TRIALS.reduce((n, t) => n + (state.trials[t.key] ? 1 : 0), 0);
+      }
+
+      function allDone() {
+        return TRIALS.every((t) => state.trials[t.key]);
+      }
+
+      function applyFists() {
+        const forged = !!state.crafted;
+        document.body.classList.toggle('knuckles-forged', forged);
+        ['punch-fist-left', 'punch-fist-right'].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.title = forged ? 'Thor Viking knuckles' : 'Bare fists';
+        });
+      }
+
+      function render() {
+        const card = document.getElementById('forge-card');
+        const countEl = document.getElementById('forge-progress-count');
+        const btn = document.getElementById('forge-btn');
+        const status = document.getElementById('forge-status');
+        const n = completedCount();
+        if (countEl) countEl.textContent = n + '/3';
+
+        TRIALS.forEach((t) => {
+          const li = document.getElementById(t.el);
+          if (!li) return;
+          const done = !!state.trials[t.key];
+          li.classList.toggle('done', done);
+          const check = li.querySelector('.forge-check');
+          if (check) check.textContent = done ? '✓' : '·';
+          li.setAttribute('aria-checked', done ? 'true' : 'false');
+        });
+
+        if (card) {
+          card.classList.toggle('is-forged', !!state.crafted);
+          card.classList.toggle('is-ready', !state.crafted && allDone());
+        }
+        if (btn) {
+          if (state.crafted) {
+            btn.disabled = true;
+            btn.textContent = 'KNUCKLES FORGED';
+          } else if (allDone()) {
+            btn.disabled = false;
+            btn.textContent = 'FORGE THOR KNUCKLES';
+          } else {
+            btn.disabled = true;
+            btn.textContent = 'FORGE THOR KNUCKLES';
+          }
+        }
+        if (status) {
+          status.className = 'forge-status';
+          if (state.crafted) {
+            status.classList.add('forged');
+            status.textContent = 'Thor Viking knuckles clad upon the Woods Viking.';
+          } else if (allDone()) {
+            status.classList.add('ready');
+            status.textContent = 'All trials cleared. Strike the forge!';
+          } else {
+            status.textContent = 'Clear all three trials to unlock the forge.';
+          }
+        }
+        applyFists();
+      }
+
+      function markTrial(key) {
+        if (!state.trials.hasOwnProperty(key)) return;
+        if (state.trials[key]) { render(); return; }
+        state.trials[key] = true;
+        save();
+        render();
+      }
+
+      function flash() {
+        if (reduceMotion) return;
+        const el = document.getElementById('forge-flash');
+        if (!el) return;
+        el.classList.remove('burst');
+        void el.offsetWidth;
+        el.classList.add('burst');
+        setTimeout(() => el.classList.remove('burst'), 750);
+      }
+
+      function craft() {
+        if (state.crafted || !allDone()) return;
+        state.crafted = true;
+        save();
+        flash();
+        render();
+        try {
+          const stage = document.querySelector('.punch-stage');
+          if (stage) stage.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        } catch (e) {}
+      }
+
+      function init() {
+        seedFromStats();
+        render();
+        const btn = document.getElementById('forge-btn');
+        if (btn) btn.addEventListener('click', craft);
+      }
+
+      return { init, markTrial, render };
+    })();
+
+
+    ThorForge.init();
     ScoreBoard.start();
 </script>
 </body>
