@@ -1240,6 +1240,253 @@
     }
 
 
+
+    /* ===== MINI-GAME: FIREPLACE PIZZA ===== */
+    .pizza-card { overflow: hidden; }
+    .pizza-card .section-heading { margin-bottom: .75rem; }
+    .pizza-hint {
+      margin: 0 0 .85rem;
+      color: var(--ash);
+      font-size: 1.15rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .pizza-arena {
+      position: relative;
+      width: 100%;
+      min-height: 300px;
+      padding: .7rem .55rem .85rem;
+      border: 3px solid #1a1010;
+      box-shadow: inset 0 0 0 1px #120808, 3px 3px 0 #000;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(18,8,8,.7) 0%, rgba(10,6,6,.3) 45%, transparent 75%),
+        radial-gradient(ellipse 60% 40% at 50% 90%, rgba(255,80,20,.18), transparent 60%),
+        linear-gradient(180deg, #0e0a08 0%, #0a0806 55%, #080604 100%);
+      image-rendering: pixelated;
+    }
+    .pizza-arena::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .3;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 10px, rgba(255,100,20,.04) 10px 11px);
+    }
+    .pizza-stage {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 220px;
+      border: 3px solid #000;
+      background:
+        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(255,60,10,.2), transparent 55%),
+        linear-gradient(180deg, #14100c 0%, #0a0806 100%);
+      box-shadow: inset 0 0 0 2px #2a2010, 3px 3px 0 #000;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .pizza-grate {
+      position: absolute;
+      left: 50%;
+      top: 28%;
+      width: 120px;
+      height: 14px;
+      margin-left: -60px;
+      z-index: 4;
+      background:
+        repeating-linear-gradient(90deg, #4a4a4a 0 8px, #2a2a2a 8px 12px);
+      border: 2px solid #111;
+      box-shadow: 0 3px 0 #000, 0 0 8px rgba(255,80,20,.25);
+      pointer-events: none;
+    }
+    .pizza-pie {
+      position: absolute;
+      left: 50%;
+      top: 14%;
+      width: 88px;
+      height: 88px;
+      margin-left: -44px;
+      z-index: 5;
+      pointer-events: none;
+      filter: drop-shadow(0 3px 0 rgba(0,0,0,.55));
+      transition: filter .15s linear;
+    }
+    .pizza-pie svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .pizza-fireplace {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      width: 140px;
+      height: 90px;
+      margin-left: -70px;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .pizza-fireplace svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .pizza-flames {
+      position: absolute;
+      left: 50%;
+      bottom: 36px;
+      width: 72px;
+      height: 56px;
+      margin-left: -36px;
+      z-index: 3;
+      pointer-events: none;
+      transform-origin: 50% 100%;
+      transform: scaleY(var(--flame-scale, .55)) scaleX(calc(0.85 + var(--flame-scale, .55) * .25));
+      opacity: calc(0.45 + var(--flame-scale, .55) * .55);
+      will-change: transform, opacity;
+    }
+    .pizza-flames svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .pizza-flames.flicker {
+      animation: pizza-flicker .35s steps(2, end) infinite;
+    }
+    @keyframes pizza-flicker {
+      0% { transform: scaleY(var(--flame-scale, .55)) scaleX(calc(0.85 + var(--flame-scale, .55) * .25)) translateX(0); }
+      50% { transform: scaleY(calc(var(--flame-scale, .55) * 1.08)) scaleX(calc(0.9 + var(--flame-scale, .55) * .2)) translateX(1px); }
+      100% { transform: scaleY(calc(var(--flame-scale, .55) * .94)) scaleX(calc(0.82 + var(--flame-scale, .55) * .28)) translateX(-1px); }
+    }
+    .pizza-meters {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: .55rem;
+      margin-top: .7rem;
+    }
+    .pizza-meter-block { }
+    .pizza-meter-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: .25rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .38rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ash);
+    }
+    .pizza-meter-num { color: var(--toxic); }
+    .pizza-meter {
+      position: relative;
+      height: 14px;
+      border: 2px solid #000;
+      background: #0a0806;
+      box-shadow: inset 0 0 0 1px #2a2010, 2px 2px 0 #000;
+      overflow: hidden;
+    }
+    .pizza-meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #c45a14, #ff6a20);
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.25);
+      transition: width .08s linear, background-color .15s linear;
+    }
+    .pizza-meter-fill.heat { background: linear-gradient(90deg, #8a2010, #ff1a1a 40%, #ffd060); }
+    .pizza-meter-fill.done-raw { background: linear-gradient(90deg, #c8b090, #e8d0a8); }
+    .pizza-meter-fill.done-good { background: linear-gradient(90deg, #c45a14, #39ff14); }
+    .pizza-meter-fill.done-burn { background: linear-gradient(90deg, #c41414, #2a1010); }
+    .pizza-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 68%;
+      width: 14%;
+      background: rgba(57,255,20,.22);
+      border-left: 1px solid rgba(57,255,20,.55);
+      border-right: 1px solid rgba(57,255,20,.55);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .pizza-status {
+      position: relative;
+      z-index: 2;
+      margin: .65rem 0 0;
+      text-align: center;
+      color: var(--ash);
+      font-size: 1.1rem;
+      line-height: 1.25;
+      min-height: 1.4em;
+    }
+    .pizza-status.win { color: var(--toxic); }
+    .pizza-status.lose { color: var(--blood-bright); }
+    .pizza-status.ready { color: var(--warn); }
+    .pizza-status.hot { color: #ff6a20; }
+    .pizza-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .85rem;
+      background: rgba(2,4,2,.82);
+      text-align: center;
+      padding: 1rem;
+    }
+    .pizza-overlay.visible { display: flex; }
+    .pizza-result {
+      margin: 0;
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(.55rem, 2.6vw, .85rem);
+      line-height: 1.45;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
+      max-width: 22rem;
+    }
+    .pizza-result.win { color: var(--toxic); }
+    .pizza-result.lose { color: var(--blood-bright); }
+    .pizza-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      justify-content: center;
+      margin-top: .95rem;
+    }
+    .pizza-controls button { min-width: 110px; }
+    #pizza-stoke.is-stoking {
+      color: #050605;
+      background: #ff6a20;
+      border-color: #ff6a20;
+      box-shadow: 3px 3px 0 #000, inset -2px -2px 0 rgba(0,0,0,.25);
+    }
+    #pizza-stoke:disabled,
+    #pizza-serve:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pizza-flames { will-change: auto; animation: none !important; }
+      .pizza-meter-fill { transition: none; }
+      .pizza-pie { transition: none; }
+    }
+    @media (max-width: 430px) {
+      .pizza-arena { min-height: 280px; }
+      .pizza-stage { height: 200px; }
+      .pizza-controls button { min-width: 90px; }
+    }
+
     /* ===== TOP SCORES / PERSONAL BESTS ===== */
     .scores-card { overflow: hidden; }
     .scores-card .section-heading { margin-bottom: .85rem; }
@@ -1669,6 +1916,11 @@
           <span class="scores-unit">most grabs</span>
           <ol class="scores-list" id="board-lobster-claw"><li class="scores-empty">No records yet</li></ol>
         </div>
+        <div class="scores-col" data-game="fireplace-pizza">
+          <h3>Fireplace Pizza</h3>
+          <span class="scores-unit">most cooks</span>
+          <ol class="scores-list" id="board-fireplace-pizza"><li class="scores-empty">No records yet</li></ol>
+        </div>
       </div>
       <p class="scores-meta">Board updated: <strong id="scores-updated">never</strong> · API: <strong id="scores-api-status">local</strong></p>
     </section>
@@ -1680,7 +1932,7 @@
         <span class="section-kicker">Beat the trials · craft the knuckles</span>
       </div>
       <div class="forge-progress">
-        <span>Trials: <strong id="forge-progress-count">0/3</strong> complete</span>
+        <span>Trials: <strong id="forge-progress-count">0/4</strong> complete</span>
         <span class="forge-badge" id="forge-badge" aria-live="polite">THOR KNUCKLES FORGED</span>
       </div>
       <ul class="forge-checklist" id="forge-checklist">
@@ -1699,13 +1951,18 @@
           <span class="forge-trial-name">Lobster Claw</span>
           <span class="forge-trial-hint">grab the lobster</span>
         </li>
+        <li data-trial="fireplacePizza" id="forge-trial-pizza">
+          <span class="forge-check" aria-hidden="true">·</span>
+          <span class="forge-trial-name">Fireplace Pizza</span>
+          <span class="forge-trial-hint">cook a perfect pie</span>
+        </li>
       </ul>
       <div class="forge-actions">
         <button type="button" id="forge-btn" disabled aria-describedby="forge-status">
           FORGE THOR KNUCKLES
         </button>
       </div>
-      <p class="forge-status" id="forge-status">Clear all three trials to unlock the forge.</p>
+      <p class="forge-status" id="forge-status">Clear all four trials to unlock the forge.</p>
     </section>
 
     <section class="card fight-card" aria-labelledby="fight-title">
@@ -1901,6 +2158,92 @@
       </div>
     </section>
 
+
+    <section class="card pizza-card" aria-labelledby="pizza-title">
+      <div class="section-heading">
+        <h2 id="pizza-title">FIREPLACE PIZZA</h2>
+        <span class="section-kicker">Stoke · Cook · Serve perfect</span>
+      </div>
+      <p class="pizza-hint">Tap STOKE (or the fire) to feed the solo fireplace. Serve when doneness hits the green band — raw or burnt loses.</p>
+      <div class="pb-row" id="pb-fireplace-pizza" aria-label="Fireplace Pizza personal bests">
+        <span>Cooks <strong id="pb-pizza-cooks">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Streak <strong id="pb-pizza-streak">0</strong></span>
+        <span class="pb-sep">·</span>
+        <span>Best <strong id="pb-pizza-best">0</strong></span>
+      </div>
+      <div class="pizza-arena" id="pizza-arena" aria-label="Fireplace pizza mini-game">
+        <div class="pizza-stage" id="pizza-stage" role="application" tabindex="0" aria-label="Solo fireplace. Tap to stoke the fire, then serve when the pizza is perfect.">
+          <div class="pizza-pie" id="pizza-pie" aria-hidden="true">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+              <circle cx="24" cy="24" r="20" fill="#e8d0a8" id="pizza-crust"/>
+              <circle cx="24" cy="24" r="16" fill="#f0e0c0" id="pizza-sauce"/>
+              <rect x="14" y="14" width="5" height="5" fill="#c41414" id="pizza-top1"/>
+              <rect x="28" y="16" width="5" height="5" fill="#c41414" id="pizza-top2"/>
+              <rect x="18" y="26" width="5" height="5" fill="#c41414" id="pizza-top3"/>
+              <rect x="27" y="27" width="4" height="4" fill="#39ff14" id="pizza-top4"/>
+              <rect x="22" y="18" width="4" height="4" fill="#e8c41a" id="pizza-cheese"/>
+            </svg>
+          </div>
+          <div class="pizza-grate" aria-hidden="true"></div>
+          <div class="pizza-flames" id="pizza-flames" aria-hidden="true" style="--flame-scale:.4">
+            <svg viewBox="0 0 40 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+              <rect x="14" y="18" width="12" height="12" fill="#ff1a1a"/>
+              <rect x="12" y="12" width="8" height="14" fill="#ff6a20"/>
+              <rect x="20" y="8" width="8" height="16" fill="#ff6a20"/>
+              <rect x="16" y="4" width="6" height="12" fill="#ffd060"/>
+              <rect x="22" y="2" width="4" height="10" fill="#fff0a0"/>
+              <rect x="10" y="16" width="6" height="10" fill="#c41414"/>
+              <rect x="26" y="14" width="6" height="12" fill="#c41414"/>
+            </svg>
+          </div>
+          <div class="pizza-fireplace" aria-hidden="true">
+            <svg viewBox="0 0 70 48" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+              <!-- stone ring -->
+              <rect x="8" y="28" width="54" height="14" fill="#3a3428"/>
+              <rect x="4" y="32" width="12" height="12" fill="#4a4438"/>
+              <rect x="54" y="32" width="12" height="12" fill="#4a4438"/>
+              <rect x="16" y="36" width="10" height="10" fill="#2a2418"/>
+              <rect x="30" y="34" width="12" height="12" fill="#5a5040"/>
+              <rect x="44" y="36" width="10" height="10" fill="#2a2418"/>
+              <rect x="10" y="30" width="8" height="6" fill="#6a6050"/>
+              <rect x="52" y="30" width="8" height="6" fill="#6a6050"/>
+              <!-- logs -->
+              <rect x="22" y="26" width="26" height="6" fill="#5a3a22"/>
+              <rect x="24" y="24" width="22" height="4" fill="#3a2414"/>
+              <rect x="28" y="22" width="8" height="4" fill="#2a1a10"/>
+              <rect x="38" y="22" width="8" height="4" fill="#2a1a10"/>
+              <!-- ember glow -->
+              <rect x="30" y="28" width="10" height="4" fill="#ff6a20" opacity=".7"/>
+            </svg>
+          </div>
+        </div>
+        <div class="pizza-meters">
+          <div class="pizza-meter-block">
+            <div class="pizza-meter-label"><span>Heat</span><span class="pizza-meter-num" id="pizza-heat-num">40%</span></div>
+            <div class="pizza-meter" aria-hidden="true"><div class="pizza-meter-fill heat" id="pizza-heat-fill" style="width:40%"></div></div>
+          </div>
+          <div class="pizza-meter-block">
+            <div class="pizza-meter-label"><span>Doneness</span><span class="pizza-meter-num" id="pizza-done-num">0%</span></div>
+            <div class="pizza-meter" aria-hidden="true">
+              <div class="pizza-zone" title="Perfect zone"></div>
+              <div class="pizza-meter-fill done-raw" id="pizza-done-fill" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+        <p class="pizza-status ready" id="pizza-status">Stoke the fire. Serve in the green band.</p>
+        <div class="pizza-overlay visible" id="pizza-overlay" aria-live="polite">
+          <p class="pizza-result" id="pizza-result">Solo fireplace ready. Cook a perfect pizza?</p>
+          <button type="button" id="pizza-start">LIGHT FIRE</button>
+        </div>
+      </div>
+      <div class="pizza-controls">
+        <button type="button" id="pizza-stoke" disabled>STOKE</button>
+        <button type="button" id="pizza-serve" disabled>SERVE</button>
+        <button type="button" class="secondary" id="pizza-retry">RETRY</button>
+      </div>
+    </section>
+
     <section class="card" aria-labelledby="join-title">
       <div class="section-heading"><h2 id="join-title">ENTER THE WOODS</h2><span class="section-kicker">Three paths · one world</span></div>
       <div class="platforms">
@@ -1948,6 +2291,24 @@
   <script>
     const STALE_MS = 15 * 60 * 1000; // 15 minutes
     const COPY_LABEL = 'RIP AND TEAR THE CODE';
+    // GitHub Pages CDN can cache JSON; prefer raw.githubusercontent with cache-bust.
+    const RAW_BASE = 'https://raw.githubusercontent.com/reggieag/valheim-join-code/main/';
+
+    async function fetchJsonBust(relativePath) {
+      const bust = '?_=' + Date.now();
+      const urls = [RAW_BASE + relativePath + bust, relativePath + bust];
+      let lastErr;
+      for (const url of urls) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          return await res.json();
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error('fetch failed');
+    }
     const els = {
       code: document.getElementById('join-code'),
       address: document.getElementById('server-address'),
@@ -1983,9 +2344,7 @@
 
     async function refresh() {
       try {
-        const res = await fetch('code.json?_=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
+        const data = await fetchJsonBust('code.json');
         els.code.textContent = data.code || '------';
         if (data.address) els.address.textContent = data.address;
         els.updated.textContent = fmt(data.updatedAt);
@@ -2141,6 +2500,7 @@
         'woods-brawl': { listId: 'board-woods-brawl', unit: 'streak', higherIsBetter: true, fmt: (n) => String(n) },
         'fjord-fishing': { listId: 'board-fjord-fishing', unit: 'catches', higherIsBetter: true, fmt: (n) => String(n) },
         'lobster-claw': { listId: 'board-lobster-claw', unit: 'grabs', higherIsBetter: true, fmt: (n) => String(n) },
+        'fireplace-pizza': { listId: 'board-fireplace-pizza', unit: 'cooks', higherIsBetter: true, fmt: (n) => String(n) },
       };
 
       let scoresApiUrl = '';
@@ -2152,6 +2512,7 @@
           woodsBrawl: { wins: 0, losses: 0, streak: 0, bestStreak: 0 },
           fjordFishing: { catches: 0, bestMs: null },
           lobsterClaw: { grabs: 0, streak: 0, bestStreak: 0 },
+          fireplacePizza: { cooks: 0, streak: 0, bestStreak: 0 },
         };
       }
 
@@ -2165,6 +2526,7 @@
             woodsBrawl: Object.assign(d.woodsBrawl, parsed.woodsBrawl || {}),
             fjordFishing: Object.assign(d.fjordFishing, parsed.fjordFishing || {}),
             lobsterClaw: Object.assign(d.lobsterClaw, parsed.lobsterClaw || {}),
+            fireplacePizza: Object.assign(d.fireplacePizza, parsed.fireplacePizza || {}),
           };
         } catch (e) {
           return defaultStats();
@@ -2223,6 +2585,9 @@
         set('pb-claw-grabs', stats.lobsterClaw.grabs);
         set('pb-claw-streak', stats.lobsterClaw.streak);
         set('pb-claw-best', stats.lobsterClaw.bestStreak);
+        set('pb-pizza-cooks', stats.fireplacePizza.cooks);
+        set('pb-pizza-streak', stats.fireplacePizza.streak);
+        set('pb-pizza-best', stats.fireplacePizza.bestStreak);
       }
 
       function renderBoardList(gameId, entries) {
@@ -2264,9 +2629,7 @@
 
       async function fetchShared() {
         try {
-          const res = await fetch('scores.json?_=' + Date.now(), { cache: 'no-store' });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          applyShared(await res.json());
+          applyShared(await fetchJsonBust('scores.json'));
         } catch (e) {
           /* keep last */
         }
@@ -2274,9 +2637,7 @@
 
       async function loadConfig() {
         try {
-          const res = await fetch('config.json?_=' + Date.now(), { cache: 'no-store' });
-          if (!res.ok) return;
-          const cfg = await res.json();
+          const cfg = await fetchJsonBust('config.json');
           if (cfg && typeof cfg.scoresApiUrl === 'string') {
             scoresApiUrl = cfg.scoresApiUrl.replace(/\/$/, '');
           }
@@ -2385,11 +2746,32 @@
         setInterval(fetchShared, POLL_MS);
       }
 
+
+      function recordPizza(won) {
+        const p = stats.fireplacePizza;
+        if (won) {
+          p.cooks += 1;
+          p.streak += 1;
+          let bested = false;
+          if (p.streak > p.bestStreak) {
+            p.bestStreak = p.streak;
+            bested = true;
+          }
+          saveStats();
+          submit('fireplace-pizza', p.cooks);
+          if (bested) submit('fireplace-pizza-streak', p.bestStreak);
+        } else {
+          p.streak = 0;
+          saveStats();
+        }
+      }
+
       return {
         start,
         recordBrawl,
         recordFish,
         recordClaw,
+        recordPizza,
         ensureName,
       };
     })();
@@ -3227,6 +3609,260 @@
 
   
 
+
+    /* ===== Fireplace Pizza mini-game ===== */
+    (function initFireplacePizza() {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const PERFECT_MIN = 68;
+      const PERFECT_MAX = 82;
+      const WIN_LINES = [
+        'Perfect pie! The longhouse will feast.',
+        'Golden crust — Thor nods in approval.',
+        'Fireplace pizza, cooked to legend!',
+        'Not raw, not ash — a warrior\'s meal!'
+      ];
+      const RAW_LINES = [
+        'Still dough! Back on the grate.',
+        'Undercooked — the fire barely kissed it.',
+        'Raw in the middle. Stoke longer next time.'
+      ];
+      const BURN_LINES = [
+        'Charred to cinders. The fireplace wins.',
+        'Burnt offering — not what Odin ordered.',
+        'Ash pie. Pull sooner next round.'
+      ];
+
+      const arena = document.getElementById('pizza-arena');
+      const stage = document.getElementById('pizza-stage');
+      const flames = document.getElementById('pizza-flames');
+      const crust = document.getElementById('pizza-crust');
+      const sauce = document.getElementById('pizza-sauce');
+      const heatFill = document.getElementById('pizza-heat-fill');
+      const heatNum = document.getElementById('pizza-heat-num');
+      const doneFill = document.getElementById('pizza-done-fill');
+      const doneNum = document.getElementById('pizza-done-num');
+      const statusEl = document.getElementById('pizza-status');
+      const overlay = document.getElementById('pizza-overlay');
+      const resultEl = document.getElementById('pizza-result');
+      const startBtn = document.getElementById('pizza-start');
+      const stokeBtn = document.getElementById('pizza-stoke');
+      const serveBtn = document.getElementById('pizza-serve');
+      const retryBtn = document.getElementById('pizza-retry');
+      if (!arena || !stage || !flames || !heatFill || !doneFill) return;
+
+      let phase = 'idle'; // idle | cooking | won | lost
+      let heat = 40;
+      let doneness = 0;
+      let raf = 0;
+      let lastTs = 0;
+      let stokeFlash = 0;
+
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = 'pizza-status' + (kind ? ' ' + kind : '');
+      }
+
+      function showOverlay(text, kind, buttonLabel) {
+        resultEl.textContent = text;
+        resultEl.className = 'pizza-result' + (kind ? ' ' + kind : '');
+        startBtn.textContent = buttonLabel || 'LIGHT FIRE';
+        overlay.classList.add('visible');
+        stokeBtn.disabled = true;
+        serveBtn.disabled = true;
+        stokeBtn.classList.remove('is-stoking');
+      }
+
+      function hideOverlay() {
+        overlay.classList.remove('visible');
+      }
+
+      function stopLoop() {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        lastTs = 0;
+      }
+
+      function lerpColor(a, b, t) {
+        t = Math.max(0, Math.min(1, t));
+        const ah = parseInt(a.slice(1), 16);
+        const bh = parseInt(b.slice(1), 16);
+        const ar = (ah >> 16) & 255, ag = (ah >> 8) & 255, ab = ah & 255;
+        const br = (bh >> 16) & 255, bg = (bh >> 8) & 255, bb = bh & 255;
+        const r = Math.round(ar + (br - ar) * t);
+        const g = Math.round(ag + (bg - ag) * t);
+        const bl = Math.round(ab + (bb - ab) * t);
+        return '#' + ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
+      }
+
+      function updatePizzaLook() {
+        const d = doneness;
+        if (crust) {
+          if (d < 40) crust.setAttribute('fill', lerpColor('#e8d0a8', '#d4a060', d / 40));
+          else if (d < PERFECT_MAX) crust.setAttribute('fill', lerpColor('#d4a060', '#c87830', (d - 40) / (PERFECT_MAX - 40)));
+          else crust.setAttribute('fill', lerpColor('#c87830', '#2a1810', Math.min(1, (d - PERFECT_MAX) / 18)));
+        }
+        if (sauce) {
+          if (d < 50) sauce.setAttribute('fill', lerpColor('#f0e0c0', '#e07040', d / 50));
+          else if (d < PERFECT_MAX) sauce.setAttribute('fill', lerpColor('#e07040', '#c41414', (d - 50) / (PERFECT_MAX - 50)));
+          else sauce.setAttribute('fill', lerpColor('#c41414', '#1a0808', Math.min(1, (d - PERFECT_MAX) / 18)));
+        }
+      }
+
+      function renderMeters() {
+        const h = Math.max(0, Math.min(100, heat));
+        const d = Math.max(0, Math.min(100, doneness));
+        heatFill.style.width = h + '%';
+        heatNum.textContent = Math.round(h) + '%';
+        doneFill.style.width = d + '%';
+        doneNum.textContent = Math.round(d) + '%';
+        doneFill.classList.remove('done-raw', 'done-good', 'done-burn');
+        if (d >= PERFECT_MIN && d <= PERFECT_MAX) doneFill.classList.add('done-good');
+        else if (d > PERFECT_MAX) doneFill.classList.add('done-burn');
+        else doneFill.classList.add('done-raw');
+        const scale = 0.25 + (h / 100) * 0.95;
+        flames.style.setProperty('--flame-scale', scale.toFixed(3));
+        if (!reduceMotion) {
+          flames.classList.toggle('flicker', phase === 'cooking' && h > 15);
+        } else {
+          flames.classList.remove('flicker');
+        }
+        updatePizzaLook();
+      }
+
+      function startRound() {
+        stopLoop();
+        phase = 'cooking';
+        hideOverlay();
+        heat = 38 + Math.random() * 10;
+        doneness = 0;
+        stokeFlash = 0;
+        stokeBtn.disabled = false;
+        serveBtn.disabled = false;
+        setStatus('Stoke the fire. Serve in the green band.', 'ready');
+        renderMeters();
+        lastTs = 0;
+        raf = requestAnimationFrame(tick);
+        try { stage.focus({ preventScroll: true }); } catch (e) {}
+      }
+
+      function endRound(won, reason) {
+        phase = won ? 'won' : 'lost';
+        stopLoop();
+        stokeBtn.disabled = true;
+        serveBtn.disabled = true;
+        flames.classList.remove('flicker');
+        renderMeters();
+        if (won) {
+          setStatus('PERFECT PIZZA!', 'win');
+          showOverlay(pick(WIN_LINES), 'win', 'COOK AGAIN');
+        } else if (reason === 'raw') {
+          setStatus('Too raw — try again.', 'lose');
+          showOverlay(pick(RAW_LINES), 'lose', 'TRY AGAIN');
+        } else {
+          setStatus('Burnt — try again.', 'lose');
+          showOverlay(pick(BURN_LINES), 'lose', 'TRY AGAIN');
+        }
+        try { ScoreBoard.recordPizza(won); } catch (e) {}
+        if (won) { try { ThorForge.markTrial('fireplacePizza'); } catch (e) {} }
+      }
+
+      function stoke() {
+        if (phase !== 'cooking') return;
+        heat = Math.min(100, heat + (reduceMotion ? 18 : 14 + Math.random() * 8));
+        stokeFlash = reduceMotion ? 0.12 : 0.22;
+        stokeBtn.classList.add('is-stoking');
+        setTimeout(() => stokeBtn.classList.remove('is-stoking'), reduceMotion ? 80 : 140);
+        setStatus('Flames leap. Keep tending…', 'hot');
+        renderMeters();
+      }
+
+      function serve() {
+        if (phase !== 'cooking') return;
+        if (doneness < PERFECT_MIN) {
+          endRound(false, 'raw');
+        } else if (doneness > PERFECT_MAX) {
+          endRound(false, 'burn');
+        } else {
+          endRound(true, 'perfect');
+        }
+      }
+
+      function tick(ts) {
+        if (phase !== 'cooking') return;
+        if (!lastTs) lastTs = ts;
+        let dt = (ts - lastTs) / 1000;
+        lastTs = ts;
+        if (dt > 0.05) dt = 0.05;
+
+        // Heat decays; higher heat cooks faster
+        const decay = reduceMotion ? 12 : 16 + (heat > 70 ? 4 : 0);
+        heat = Math.max(8, heat - decay * dt);
+        if (stokeFlash > 0) stokeFlash = Math.max(0, stokeFlash - dt);
+
+        const cookRate = (heat / 100) * (reduceMotion ? 18 : 22 + heat * 0.06);
+        // mild ambient cook even at low heat so game progresses
+        doneness += (cookRate + (reduceMotion ? 2.5 : 3.2)) * dt;
+
+        if (doneness >= 100) {
+          doneness = 100;
+          renderMeters();
+          endRound(false, 'burn');
+          return;
+        }
+
+        if (doneness >= PERFECT_MIN && doneness <= PERFECT_MAX) {
+          setStatus('Green band! SERVE now!', 'win');
+        } else if (doneness > PERFECT_MAX) {
+          setStatus('Burning! Serve or lose it!', 'lose');
+        } else if (heat < 25) {
+          setStatus('Fire fading — STOKE!', 'ready');
+        }
+
+        renderMeters();
+        raf = requestAnimationFrame(tick);
+      }
+
+      startBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        startRound();
+      });
+      retryBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        startRound();
+      });
+      stokeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        stoke();
+      });
+      serveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        serve();
+      });
+      stage.addEventListener('pointerdown', (e) => {
+        if (phase !== 'cooking') return;
+        if (e.target.closest && e.target.closest('button')) return;
+        e.preventDefault();
+        stoke();
+      });
+      stage.addEventListener('keydown', (e) => {
+        if (phase !== 'cooking') return;
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          stoke();
+        } else if (e.key === 's' || e.key === 'S') {
+          e.preventDefault();
+          serve();
+        }
+      });
+
+      showOverlay('Solo fireplace ready. Cook a perfect pizza?', '', 'LIGHT FIRE');
+      renderMeters();
+    })();
+
     /* ===== Thor Forge meta-progression ===== */
     const ThorForge = (function () {
       const LS_KEY = 'valheim-thor-forge';
@@ -3235,11 +3871,12 @@
         { key: 'woodsBrawl', el: 'forge-trial-brawl', label: 'Woods Brawl' },
         { key: 'fjordFishing', el: 'forge-trial-fish', label: 'Fjord Fishing' },
         { key: 'lobsterClaw', el: 'forge-trial-claw', label: 'Lobster Claw' },
+        { key: 'fireplacePizza', el: 'forge-trial-pizza', label: 'Fireplace Pizza' },
       ];
 
       function defaultState() {
         return {
-          trials: { woodsBrawl: false, fjordFishing: false, lobsterClaw: false },
+          trials: { woodsBrawl: false, fjordFishing: false, lobsterClaw: false, fireplacePizza: false },
           crafted: false,
         };
       }
@@ -3272,6 +3909,7 @@
           if (stats && stats.woodsBrawl && (stats.woodsBrawl.wins || 0) > 0) state.trials.woodsBrawl = true;
           if (stats && stats.fjordFishing && (stats.fjordFishing.catches || 0) > 0) state.trials.fjordFishing = true;
           if (stats && stats.lobsterClaw && (stats.lobsterClaw.grabs || 0) > 0) state.trials.lobsterClaw = true;
+          if (stats && stats.fireplacePizza && (stats.fireplacePizza.cooks || 0) > 0) state.trials.fireplacePizza = true;
           save();
         } catch (e) {}
       }
@@ -3299,7 +3937,7 @@
         const btn = document.getElementById('forge-btn');
         const status = document.getElementById('forge-status');
         const n = completedCount();
-        if (countEl) countEl.textContent = n + '/3';
+        if (countEl) countEl.textContent = n + '/' + TRIALS.length;
 
         TRIALS.forEach((t) => {
           const li = document.getElementById(t.el);
@@ -3336,7 +3974,7 @@
             status.classList.add('ready');
             status.textContent = 'All trials cleared. Strike the forge!';
           } else {
-            status.textContent = 'Clear all three trials to unlock the forge.';
+            status.textContent = 'Clear all four trials to unlock the forge.';
           }
         }
         applyFists();
