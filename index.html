@@ -1011,6 +1011,234 @@
       .fish-meter-label { font-size: .32rem; }
     }
 
+
+    /* ===== MINI-GAME: LOBSTER CLAW ===== */
+    .claw-card { overflow: hidden; }
+    .claw-card .section-heading { margin-bottom: .75rem; }
+    .claw-hint {
+      margin: 0 0 .85rem;
+      color: var(--ash);
+      font-size: 1.15rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .claw-arena {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      padding: .7rem .55rem .85rem;
+      border: 3px solid #1a1010;
+      box-shadow: inset 0 0 0 1px #120808, 3px 3px 0 #000;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(18,8,8,.75) 0%, rgba(10,6,6,.35) 40%, transparent 70%),
+        radial-gradient(ellipse 70% 45% at 50% 0%, rgba(80,20,20,.35), transparent 55%),
+        linear-gradient(180deg, #120a0a 0%, #0c0808 55%, #080606 100%);
+      image-rendering: pixelated;
+    }
+    .claw-arena::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 10px, rgba(255,26,26,.04) 10px 11px);
+    }
+    .claw-playfield {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 240px;
+      border: 3px solid #000;
+      background:
+        repeating-linear-gradient(90deg, #0e0a0a 0 12px, #120c0c 12px 24px),
+        linear-gradient(180deg, #1a1010 0%, #0a0606 100%);
+      box-shadow: inset 0 0 0 2px #2a1818, 3px 3px 0 #000;
+      overflow: hidden;
+    }
+    .claw-rail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: linear-gradient(180deg, #4a3030 0%, #2a1818 100%);
+      border-bottom: 2px solid #000;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .claw-carriage {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 48px;
+      height: 100%;
+      z-index: 5;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .claw-cable {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 4px;
+      margin-left: -2px;
+      height: 20px;
+      background: #8a8a8a;
+      box-shadow: 1px 0 0 #222;
+      transform-origin: top center;
+    }
+    .claw-head {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      width: 40px;
+      height: 36px;
+      margin-left: -20px;
+      transform: translateY(20px);
+    }
+    .claw-head svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .claw-lobster {
+      position: absolute;
+      bottom: 28px;
+      width: 44px;
+      height: 32px;
+      z-index: 3;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 0 rgba(0,0,0,.55));
+      will-change: transform, left;
+      transition: none;
+    }
+    .claw-lobster.grabbed {
+      z-index: 6;
+    }
+    .claw-lobster svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+    .claw-chute {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 52px;
+      height: 56px;
+      background:
+        linear-gradient(180deg, transparent 0 8px, #1a2a10 8px),
+        repeating-linear-gradient(90deg, #0a1808 0 6px, #122010 6px 12px);
+      border-left: 3px solid #000;
+      border-top: 3px solid #000;
+      box-shadow: inset 2px 0 0 #2a3a18;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .claw-chute::after {
+      content: "PRIZE";
+      position: absolute;
+      top: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: "Press Start 2P", monospace;
+      font-size: .28rem;
+      color: var(--toxic);
+      letter-spacing: .06em;
+      text-shadow: 1px 1px 0 #000;
+    }
+    .claw-floor {
+      position: absolute;
+      left: 0;
+      right: 52px;
+      bottom: 0;
+      height: 18px;
+      background: linear-gradient(180deg, #3a2010 0%, #1a1008 100%);
+      border-top: 2px solid #000;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .claw-status {
+      position: relative;
+      z-index: 2;
+      margin: .65rem 0 0;
+      text-align: center;
+      color: var(--ash);
+      font-size: 1.1rem;
+      line-height: 1.25;
+      min-height: 1.4em;
+    }
+    .claw-status.win { color: var(--toxic); }
+    .claw-status.lose { color: var(--blood-bright); }
+    .claw-status.ready { color: var(--warn); }
+    .claw-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .85rem;
+      background: rgba(2,4,2,.82);
+      text-align: center;
+      padding: 1rem;
+    }
+    .claw-overlay.visible { display: flex; }
+    .claw-result {
+      margin: 0;
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(.55rem, 2.6vw, .85rem);
+      line-height: 1.45;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
+      max-width: 22rem;
+    }
+    .claw-result.win { color: var(--toxic); }
+    .claw-result.lose { color: var(--blood-bright); }
+    .claw-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      justify-content: center;
+      margin-top: .95rem;
+    }
+    .claw-controls button { min-width: 110px; }
+    .claw-dir-group {
+      display: flex;
+      gap: .45rem;
+    }
+    #claw-drop.is-dropping {
+      color: #050605;
+      background: var(--blood-bright);
+      border-color: var(--blood-bright);
+      box-shadow: 3px 3px 0 #000, inset -2px -2px 0 rgba(0,0,0,.25);
+    }
+    #claw-drop:disabled,
+    #claw-left:disabled,
+    #claw-right:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .claw-carriage, .claw-lobster { will-change: auto; }
+      .claw-cable, .claw-head { transition: none !important; }
+    }
+    @media (max-width: 430px) {
+      .claw-arena { min-height: 260px; }
+      .claw-playfield { height: 210px; }
+      .claw-controls button { min-width: 90px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1130,11 +1358,11 @@
         <h2 id="fish-title">FJORD FISHING</h2>
         <span class="section-kicker">Hold to reel · Stardew-style</span>
       </div>
-      <p class="fish-hint">Cast, wait for the bite, then keep the fish inside the green bar. Hold SPACE / HOLD / tap the track.</p>
-      <div class="fish-arena" id="fish-arena" aria-label="Fishing mini-game">
+      <p class="fish-hint">Cast, wait for the bite, then keep Spite Fish inside the green bar. Hold SPACE / HOLD / tap the track.</p>
+      <div class="fish-arena" id="fish-arena" aria-label="Fjord Fishing — catch Spite Fish">
         <div class="fish-play" id="fish-play" hidden>
           <div class="fish-track-wrap">
-            <div class="fish-track" id="fish-track" role="application" tabindex="0" aria-label="Fishing track. Hold to raise the catch bar.">
+            <div class="fish-track" id="fish-track" role="application" tabindex="0" aria-label="Fishing track for Spite Fish. Hold to raise the catch bar.">
               <div class="fish-track-water" aria-hidden="true"></div>
               <div class="fish-bar" id="fish-bar" aria-hidden="true"></div>
               <div class="fish-icon" id="fish-icon" aria-hidden="true">
@@ -1158,7 +1386,7 @@
               <div class="fish-meter-label"><span>Catch</span><span class="fish-meter-num" id="fish-meter-num">25%</span></div>
               <div class="fish-meter" aria-hidden="true"><div class="fish-meter-fill" id="fish-meter-fill" style="width:25%"></div></div>
             </div>
-            <p class="fish-status hooked" id="fish-status">Fish on! Hold to keep it in the green bar.</p>
+            <p class="fish-status hooked" id="fish-status">Spite Fish on! Hold to keep it in the green bar.</p>
           </div>
         </div>
         <div class="fish-overlay visible" id="fish-overlay" aria-live="polite">
@@ -1169,6 +1397,65 @@
       <div class="fish-controls">
         <button type="button" id="fish-hold" disabled aria-pressed="false">HOLD</button>
         <button type="button" class="secondary" id="fish-recast">RECAST</button>
+      </div>
+    </section>
+
+    <section class="card claw-card" aria-labelledby="claw-title">
+      <div class="section-heading">
+        <h2 id="claw-title">LOBSTER CLAW</h2>
+        <span class="section-kicker">Aim · Drop · Claim the catch</span>
+      </div>
+      <p class="claw-hint">Slide the claw over the lobster, then DROP. Tap arrows or hold ← →. Touch-friendly.</p>
+      <div class="claw-arena" id="claw-arena" aria-label="Lobster claw mini-game">
+        <div class="claw-playfield" id="claw-playfield" role="application" tabindex="0" aria-label="Claw machine. Move left and right, then drop to grab the lobster.">
+          <div class="claw-rail" aria-hidden="true"></div>
+          <div class="claw-carriage" id="claw-carriage" aria-hidden="true">
+            <div class="claw-cable" id="claw-cable"></div>
+            <div class="claw-head" id="claw-head">
+              <svg viewBox="0 0 40 36" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+                <rect x="14" y="0" width="12" height="8" fill="#8a8a8a"/>
+                <rect x="10" y="8" width="20" height="8" fill="#c0c0c0"/>
+                <rect x="4" y="14" width="12" height="6" fill="#a0a0a0" id="claw-jaw-l"/>
+                <rect x="24" y="14" width="12" height="6" fill="#a0a0a0" id="claw-jaw-r"/>
+                <rect x="2" y="18" width="8" height="14" fill="#787878"/>
+                <rect x="30" y="18" width="8" height="14" fill="#787878"/>
+                <rect x="16" y="10" width="8" height="6" fill="#39ff14"/>
+              </svg>
+            </div>
+          </div>
+          <div class="claw-lobster" id="claw-lobster" aria-hidden="true">
+            <svg viewBox="0 0 44 32" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-label="Lobster">
+              <rect x="14" y="10" width="18" height="12" fill="#c41414"/>
+              <rect x="12" y="12" width="4" height="8" fill="#8a1010"/>
+              <rect x="30" y="8" width="10" height="14" fill="#ff1a1a"/>
+              <rect x="36" y="10" width="6" height="4" fill="#ff6a3a"/>
+              <rect x="36" y="18" width="6" height="4" fill="#ff6a3a"/>
+              <rect x="32" y="12" width="3" height="3" fill="#111"/>
+              <rect x="4" y="6" width="12" height="5" fill="#a01010"/>
+              <rect x="4" y="20" width="12" height="5" fill="#a01010"/>
+              <rect x="2" y="4" width="6" height="4" fill="#ff1a1a"/>
+              <rect x="2" y="22" width="6" height="4" fill="#ff1a1a"/>
+              <rect x="18" y="22" width="3" height="6" fill="#8a1010"/>
+              <rect x="24" y="22" width="3" height="6" fill="#8a1010"/>
+              <rect x="20" y="8" width="6" height="3" fill="#8a1010"/>
+            </svg>
+          </div>
+          <div class="claw-floor" aria-hidden="true"></div>
+          <div class="claw-chute" aria-hidden="true"></div>
+        </div>
+        <p class="claw-status ready" id="claw-status">Line up the claw. DROP when ready.</p>
+        <div class="claw-overlay visible" id="claw-overlay" aria-live="polite">
+          <p class="claw-result" id="claw-result">Ready to snatch a fjord lobster?</p>
+          <button type="button" id="claw-start">INSERT COIN</button>
+        </div>
+      </div>
+      <div class="claw-controls">
+        <div class="claw-dir-group">
+          <button type="button" class="secondary" id="claw-left" disabled aria-label="Move claw left">◀</button>
+          <button type="button" class="secondary" id="claw-right" disabled aria-label="Move claw right">▶</button>
+        </div>
+        <button type="button" id="claw-drop" disabled>DROP</button>
+        <button type="button" class="secondary" id="claw-retry">RETRY</button>
       </div>
     </section>
 
@@ -1565,17 +1852,17 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       const WIN_LINES = [
-        'Landed a fjord serpent! The gods approve.',
-        'Fresh catch for the longhouse feast!',
-        'You reeled in destiny — Valhalla snacks await.',
-        'Trophy fish! Even the boars are jealous.',
-        'The woods yield their treasure. Nice haul!'
+        'Landed Spite Fish! The gods approve.',
+        'Fresh Spite Fish for the longhouse feast!',
+        'You reeled in Spite Fish — Valhalla snacks await.',
+        'Trophy Spite Fish! Even the boars are jealous.',
+        'Spite Fish yields. Nice haul!'
       ];
       const LOSE_LINES = [
         'It got away into the mist…',
         'Line snapped. The fjord laughs.',
         'Too slow, viking — try again.',
-        'The fish escapes to tell the tale.'
+        'Spite Fish escapes to tell the tale.'
       ];
 
       const arena = document.getElementById('fish-arena');
@@ -1764,7 +2051,7 @@
         meterFill.classList.toggle('draining', !hit);
         if (hit) {
           setProgress(progress + FILL_RATE * dt);
-          statusEl.textContent = 'Hooked solid — keep holding the bar on the fish!';
+          statusEl.textContent = 'Hooked solid — keep holding the bar on Spite Fish!';
           statusEl.className = 'fish-status hooked';
         } else {
           setProgress(progress - DRAIN_RATE * dt);
@@ -1799,7 +2086,7 @@
         fishV = 0;
         fishTarget = fishY;
         fishRetargetAt = 0;
-        statusEl.textContent = 'Fish on! Hold to keep it in the green bar.';
+        statusEl.textContent = 'Spite Fish on! Hold to keep it in the green bar.';
         statusEl.className = 'fish-status hooked';
         meterFill.classList.remove('draining');
         renderPositions();
@@ -1824,7 +2111,7 @@
         barV = 0;
         fishY = -40;
         renderPositions();
-        statusEl.textContent = 'Waiting for a bite in the misty fjord…';
+        statusEl.textContent = 'Waiting for Spite Fish in the misty fjord…';
         statusEl.className = 'fish-status bite';
         meterFill.classList.remove('draining');
         const delay = reduceMotion ? 600 : 700 + Math.random() * 1400;
@@ -1900,6 +2187,325 @@
 
       // Idle overlay ready
       showOverlay('Ready to cast into the black forest fjord?', '', 'CAST LINE');
+    })();
+
+    /* ===== Lobster Claw mini-game ===== */
+    (function initLobsterClaw() {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const WIN_LINES = [
+        'Lobster secured! Feast of the drowned.',
+        'Claws of steel — the prize is yours!',
+        'Red shell for the longhouse table!',
+        'You yanked a fjord lobster from the deep!'
+      ];
+      const LOSE_LINES = [
+        'Missed! The lobster scuttles away.',
+        'Claw slipped — try again, viking.',
+        'Empty grab. The machine mocks you.',
+        'Almost… the lobster lives another day.'
+      ];
+
+      const arena = document.getElementById('claw-arena');
+      const field = document.getElementById('claw-playfield');
+      const carriage = document.getElementById('claw-carriage');
+      const cable = document.getElementById('claw-cable');
+      const head = document.getElementById('claw-head');
+      const lobster = document.getElementById('claw-lobster');
+      const statusEl = document.getElementById('claw-status');
+      const overlay = document.getElementById('claw-overlay');
+      const resultEl = document.getElementById('claw-result');
+      const startBtn = document.getElementById('claw-start');
+      const dropBtn = document.getElementById('claw-drop');
+      const leftBtn = document.getElementById('claw-left');
+      const rightBtn = document.getElementById('claw-right');
+      const retryBtn = document.getElementById('claw-retry');
+      if (!arena || !field || !carriage || !lobster) return;
+
+      let phase = 'idle'; // idle | sweeping | dropping | lifting | won | lost
+      let clawX = 0;      // left edge of carriage in px
+      let clawDir = 1;
+      let lobsterX = 80;
+      let cableLen = 20;
+      let holdLeft = false;
+      let holdRight = false;
+      let autoSweep = true;
+      let raf = 0;
+      let lastTs = 0;
+      let grabOffset = 0;
+
+      const CARRIAGE_W = 48;
+      const LOBSTER_W = 44;
+      const CHUTE_W = 52;
+      const GRAB_PAD = 18; // approachable hitbox
+
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function fieldWidth() {
+        return field.clientWidth || 300;
+      }
+
+      function maxClawX() {
+        return Math.max(0, fieldWidth() - CARRIAGE_W - 4);
+      }
+
+      function maxLobsterX() {
+        return Math.max(8, fieldWidth() - CHUTE_W - LOBSTER_W - 8);
+      }
+
+      function placeLobster() {
+        const max = maxLobsterX();
+        // Keep away from chute and not always center — approachable band
+        lobsterX = 16 + Math.random() * Math.max(24, max - 40);
+        lobster.style.left = lobsterX + 'px';
+        lobster.style.bottom = '28px';
+        lobster.style.transform = 'none';
+        lobster.classList.remove('grabbed');
+      }
+
+      function renderClaw() {
+        carriage.style.transform = 'translateX(' + clawX + 'px)';
+        cable.style.height = cableLen + 'px';
+        head.style.transform = 'translateY(' + cableLen + 'px)';
+      }
+
+      function setStatus(text, kind) {
+        statusEl.textContent = text;
+        statusEl.className = 'claw-status' + (kind ? ' ' + kind : '');
+      }
+
+      function showOverlay(text, kind, buttonLabel) {
+        resultEl.textContent = text;
+        resultEl.className = 'claw-result' + (kind ? ' ' + kind : '');
+        startBtn.textContent = buttonLabel || 'INSERT COIN';
+        overlay.classList.add('visible');
+        dropBtn.disabled = true;
+        leftBtn.disabled = true;
+        rightBtn.disabled = true;
+        dropBtn.classList.remove('is-dropping');
+      }
+
+      function hideOverlay() {
+        overlay.classList.remove('visible');
+      }
+
+      function stopLoop() {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        lastTs = 0;
+      }
+
+      function enableMove(on) {
+        leftBtn.disabled = !on;
+        rightBtn.disabled = !on;
+        dropBtn.disabled = !on;
+      }
+
+      function clawCenter() {
+        return clawX + CARRIAGE_W / 2;
+      }
+
+      function lobsterCenter() {
+        return lobsterX + LOBSTER_W / 2;
+      }
+
+      function startRound() {
+        stopLoop();
+        phase = 'sweeping';
+        hideOverlay();
+        clawX = 8;
+        clawDir = 1;
+        cableLen = 20;
+        grabOffset = 0;
+        autoSweep = !(holdLeft || holdRight);
+        placeLobster();
+        renderClaw();
+        enableMove(true);
+        setStatus('Line up the claw. DROP when ready.', 'ready');
+        lastTs = 0;
+        raf = requestAnimationFrame(tick);
+        try { field.focus({ preventScroll: true }); } catch (e) {}
+      }
+
+      function endRound(won) {
+        phase = won ? 'won' : 'lost';
+        stopLoop();
+        enableMove(false);
+        if (won) {
+          setStatus('LOBSTER CAUGHT!', 'win');
+          showOverlay(pick(WIN_LINES), 'win', 'PLAY AGAIN');
+        } else {
+          setStatus('Missed — try again.', 'lose');
+          showOverlay(pick(LOSE_LINES), 'lose', 'TRY AGAIN');
+        }
+      }
+
+      function beginDrop() {
+        if (phase !== 'sweeping') return;
+        phase = 'dropping';
+        autoSweep = false;
+        holdLeft = false;
+        holdRight = false;
+        dropBtn.disabled = true;
+        leftBtn.disabled = true;
+        rightBtn.disabled = true;
+        dropBtn.classList.add('is-dropping');
+        setStatus('Dropping the claw…', '');
+      }
+
+      function tick(ts) {
+        if (phase === 'idle' || phase === 'won' || phase === 'lost') return;
+        if (!lastTs) lastTs = ts;
+        let dt = (ts - lastTs) / 1000;
+        lastTs = ts;
+        if (dt > 0.05) dt = 0.05;
+
+        const maxX = maxClawX();
+
+        if (phase === 'sweeping') {
+          const speed = reduceMotion ? 70 : 110;
+          if (holdLeft || holdRight) {
+            autoSweep = false;
+            if (holdLeft) clawX -= speed * dt;
+            if (holdRight) clawX += speed * dt;
+          } else if (autoSweep) {
+            clawX += clawDir * speed * dt;
+            if (clawX <= 0) { clawX = 0; clawDir = 1; }
+            if (clawX >= maxX) { clawX = maxX; clawDir = -1; }
+          }
+          clawX = Math.max(0, Math.min(maxX, clawX));
+          // Gentle lobster wander for life (slow)
+          if (!reduceMotion) {
+            lobsterX += Math.sin(ts / 700) * 0.15;
+            lobsterX = Math.max(8, Math.min(maxLobsterX(), lobsterX));
+            lobster.style.left = lobsterX + 'px';
+          }
+          renderClaw();
+        } else if (phase === 'dropping') {
+          const dropSpeed = reduceMotion ? 160 : 220;
+          const target = reduceMotion ? 150 : 155;
+          cableLen += dropSpeed * dt;
+          if (cableLen >= target) {
+            cableLen = target;
+            renderClaw();
+            // Check grab
+            const dx = Math.abs(clawCenter() - lobsterCenter());
+            if (dx <= GRAB_PAD) {
+              phase = 'lifting';
+              grabOffset = lobsterCenter() - clawCenter();
+              lobster.classList.add('grabbed');
+              setStatus('Got it! Reeling in…', 'win');
+            } else {
+              // Miss: retract then lose
+              phase = 'misslift';
+              setStatus('Empty claws…', 'lose');
+            }
+          } else {
+            renderClaw();
+          }
+        } else if (phase === 'lifting' || phase === 'misslift') {
+          const liftSpeed = reduceMotion ? 140 : 200;
+          cableLen -= liftSpeed * dt;
+          if (phase === 'lifting') {
+            // Carry lobster with claw
+            const lx = clawCenter() + grabOffset - LOBSTER_W / 2;
+            lobster.style.left = lx + 'px';
+            const liftFromBottom = 28 + (155 - Math.max(20, cableLen)) * 0.85;
+            lobster.style.bottom = Math.min(170, liftFromBottom) + 'px';
+          }
+          if (cableLen <= 20) {
+            cableLen = 20;
+            renderClaw();
+            if (phase === 'lifting') {
+              // Slide toward chute
+              phase = 'todeliver';
+            } else {
+              endRound(false);
+              return;
+            }
+          } else {
+            renderClaw();
+          }
+        } else if (phase === 'todeliver') {
+          const speed = reduceMotion ? 100 : 140;
+          clawX += speed * dt;
+          const lx = clawCenter() + grabOffset - LOBSTER_W / 2;
+          lobster.style.left = lx + 'px';
+          renderClaw();
+          if (clawX >= maxClawX() - 2) {
+            // Drop into chute
+            lobster.style.left = (fieldWidth() - CHUTE_W + 4) + 'px';
+            lobster.style.bottom = '8px';
+            lobster.style.transform = 'scale(0.85)';
+            endRound(true);
+            return;
+          }
+        }
+
+        raf = requestAnimationFrame(tick);
+      }
+
+      function setHold(dir, on) {
+        if (phase !== 'sweeping') return;
+        if (dir === 'left') holdLeft = on;
+        if (dir === 'right') holdRight = on;
+        if (on) autoSweep = false;
+      }
+
+      leftBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setHold('left', true); });
+      leftBtn.addEventListener('pointerup', () => setHold('left', false));
+      leftBtn.addEventListener('pointerleave', () => setHold('left', false));
+      rightBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); setHold('right', true); });
+      rightBtn.addEventListener('pointerup', () => setHold('right', false));
+      rightBtn.addEventListener('pointerleave', () => setHold('right', false));
+
+      dropBtn.addEventListener('click', (e) => { e.stopPropagation(); beginDrop(); });
+
+      field.addEventListener('pointerdown', (e) => {
+        if (phase !== 'sweeping') return;
+        if (e.target && e.target.closest && e.target.closest('button')) return;
+        // Tap field = drop (mobile friendly)
+        e.preventDefault();
+        beginDrop();
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (phase !== 'sweeping' && phase !== 'idle') {
+          if (e.code === 'ArrowLeft' || e.code === 'ArrowRight' || e.code === 'Space') {
+            // still allow during idle? no
+          }
+        }
+        if (phase !== 'sweeping') return;
+        if (e.code === 'ArrowLeft') { e.preventDefault(); setHold('left', true); }
+        if (e.code === 'ArrowRight') { e.preventDefault(); setHold('right', true); }
+        if (e.code === 'Space' || e.key === ' ') {
+          const t = e.target;
+          if (t && t.tagName === 'BUTTON' && t !== dropBtn && t !== startBtn) return;
+          e.preventDefault();
+          beginDrop();
+        }
+      });
+      window.addEventListener('keyup', (e) => {
+        if (e.code === 'ArrowLeft') setHold('left', false);
+        if (e.code === 'ArrowRight') setHold('right', false);
+      });
+
+      startBtn.addEventListener('click', (e) => { e.stopPropagation(); startRound(); });
+      retryBtn.addEventListener('click', (e) => { e.stopPropagation(); startRound(); });
+
+      window.addEventListener('blur', () => { holdLeft = false; holdRight = false; });
+      window.addEventListener('resize', () => {
+        clawX = Math.min(clawX, maxClawX());
+        lobsterX = Math.min(lobsterX, maxLobsterX());
+        lobster.style.left = lobsterX + 'px';
+        renderClaw();
+      });
+
+      showOverlay('Ready to snatch a fjord lobster?', '', 'INSERT COIN');
+      setStatus('Insert coin to play.', 'ready');
+      placeLobster();
+      renderClaw();
     })();
 
 
