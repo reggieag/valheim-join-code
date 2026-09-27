@@ -531,6 +531,272 @@
       #join-code { letter-spacing: .1em; text-indent: .1em; }
       button { font-size: .48rem; padding: .7rem 1rem; }
     }
+
+    /* ===== MINI-GAME: VIKING VS BOAR ===== */
+    .fight-card {
+      overflow: hidden;
+    }
+    .fight-card .section-heading {
+      margin-bottom: .75rem;
+    }
+    .fight-hint {
+      margin: 0 0 .85rem;
+      color: var(--ash);
+      font-size: 1.15rem;
+      line-height: 1.3;
+      text-align: center;
+    }
+    .fight-arena {
+      position: relative;
+      width: 100%;
+      min-height: 220px;
+      padding: .85rem .7rem 1rem;
+      border: 3px solid #1a2a14;
+      box-shadow: inset 0 0 0 1px #0a1208, 3px 3px 0 #000;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(8,18,6,.55) 0%, rgba(4,10,4,.2) 40%, transparent 70%),
+        radial-gradient(ellipse 90% 60% at 50% 100%, rgba(20,40,12,.7), transparent 70%),
+        linear-gradient(180deg, #0c160a 0%, #142010 45%, #0a1408 100%);
+      image-rendering: pixelated;
+    }
+    .fight-arena::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .55;
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 120' preserveAspectRatio='none'%3E%3Cpath fill='%23060c05' d='M0 120 L0 70 L12 40 L24 70 L36 20 L48 70 L64 35 L80 70 L100 15 L120 70 L140 45 L155 70 L175 25 L195 70 L215 40 L230 70 L250 18 L270 70 L290 45 L305 70 L320 55 L320 120 Z'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(90deg, transparent 0 14px, rgba(57,255,20,.04) 14px 15px);
+      background-size: 100% 55%, auto;
+      background-position: bottom, 0 0;
+      background-repeat: no-repeat, repeat;
+    }
+    .fight-arena::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 28%;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(90deg, #1a2e12 0 8px, #122208 8px 16px),
+        linear-gradient(180deg, transparent, #081008);
+      opacity: .85;
+      image-rendering: pixelated;
+    }
+    .fight-arena:focus-visible {
+      outline: 2px solid var(--toxic);
+      outline-offset: 2px;
+    }
+    .fight-arena.is-busy { cursor: default; }
+    .fight-hud {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .55rem .85rem;
+      margin-bottom: .55rem;
+    }
+    .hp-block { min-width: 0; }
+    .hp-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .4rem;
+      margin-bottom: .3rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .38rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--toxic);
+    }
+    .hp-label .hp-num { color: var(--blood-bright); }
+    .hp-bar {
+      height: 12px;
+      border: 2px solid #000;
+      background: #050605;
+      box-shadow: inset 0 0 0 1px #1a2218, 2px 2px 0 #000;
+      overflow: hidden;
+    }
+    .hp-fill {
+      height: 100%;
+      width: 100%;
+      transform-origin: left center;
+      transition: width .18s steps(4, end);
+      image-rendering: pixelated;
+    }
+    .hp-fill.viking {
+      background: linear-gradient(180deg, #5cff3a 0%, var(--toxic) 40%, var(--toxic-dim) 100%);
+      box-shadow: 0 0 8px rgba(57,255,20,.45);
+    }
+    .hp-fill.boar {
+      background: linear-gradient(180deg, #ff4a4a 0%, var(--blood-bright) 40%, var(--blood) 100%);
+      box-shadow: 0 0 8px rgba(255,26,26,.45);
+    }
+    .fight-stage {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: .5rem;
+      min-height: 140px;
+      padding: .4rem .2rem 1.1rem;
+    }
+    .fighter {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 42%;
+      max-width: 160px;
+    }
+    .fighter-sprite {
+      width: clamp(64px, 22vw, 110px);
+      height: clamp(64px, 22vw, 110px);
+      display: block;
+      image-rendering: auto;
+      filter: drop-shadow(0 4px 0 rgba(0,0,0,.55));
+      transform-origin: 50% 90%;
+      transition: transform .08s steps(2, end);
+      pointer-events: none;
+      user-select: none;
+    }
+    .fighter-boar .fighter-sprite {
+      image-rendering: pixelated;
+      width: clamp(78px, 26vw, 130px);
+      height: clamp(56px, 18vw, 92px);
+    }
+    .fighter-name {
+      margin-top: .35rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .35rem;
+      letter-spacing: .1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .vs-badge {
+      align-self: center;
+      font-family: "Press Start 2P", monospace;
+      font-size: .55rem;
+      color: var(--blood-bright);
+      text-shadow: 0 0 10px rgba(196,20,20,.7);
+      margin-bottom: 1.6rem;
+      flex-shrink: 0;
+    }
+    .fight-fx {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      top: 42%;
+      transform: translate(-50%, -50%) scale(.6);
+      font-size: clamp(1.4rem, 6vw, 2.2rem);
+      pointer-events: none;
+      opacity: 0;
+      filter: brightness(1.4);
+    }
+    .fight-fx.show {
+      animation: fight-impact .35s steps(4, end) forwards;
+    }
+    .fight-arena.punching .fighter-viking .fighter-sprite {
+      animation: viking-punch .28s steps(3, end);
+    }
+    .fight-arena.boar-hit .fighter-boar .fighter-sprite {
+      animation: fighter-hit .32s steps(3, end);
+    }
+    .fight-arena.viking-hit .fighter-viking .fighter-sprite {
+      animation: fighter-hit .32s steps(3, end);
+    }
+    .fight-arena.boar-attack .fighter-boar .fighter-sprite {
+      animation: boar-lunge .34s steps(3, end);
+    }
+    .fight-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: .85rem;
+      background: rgba(2,4,2,.82);
+      text-align: center;
+      padding: 1rem;
+    }
+    .fight-overlay.visible { display: flex; }
+    .fight-result {
+      margin: 0;
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(.7rem, 3.2vw, 1rem);
+      line-height: 1.4;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 0 #000;
+    }
+    .fight-result.win { color: var(--toxic); }
+    .fight-result.lose { color: var(--blood-bright); }
+    .fight-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      justify-content: center;
+      margin-top: .95rem;
+    }
+    .fight-controls button {
+      min-width: 140px;
+    }
+    button.secondary {
+      color: var(--toxic);
+      background: #050605;
+      border-color: var(--line);
+      box-shadow: 3px 3px 0 #000;
+    }
+    button.secondary:hover {
+      border-color: var(--toxic);
+      box-shadow: 3px 3px 0 var(--toxic-dim);
+    }
+    @keyframes fight-impact {
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(.4); }
+      30%  { opacity: 1; transform: translate(-50%, -55%) scale(1.25); }
+      100% { opacity: 0; transform: translate(-50%, -70%) scale(.9); }
+    }
+    @keyframes viking-punch {
+      0%   { transform: translateX(0) scale(1); }
+      40%  { transform: translateX(18%) scale(1.08) rotate(6deg); }
+      100% { transform: translateX(0) scale(1); }
+    }
+    @keyframes boar-lunge {
+      0%   { transform: translateX(0) scale(1); }
+      45%  { transform: translateX(-22%) scale(1.06) rotate(-4deg); }
+      100% { transform: translateX(0) scale(1); }
+    }
+    @keyframes fighter-hit {
+      0%, 100% { transform: translateX(0); filter: drop-shadow(0 4px 0 rgba(0,0,0,.55)) brightness(1); }
+      25%      { transform: translateX(8%) scale(1.04); filter: drop-shadow(0 4px 0 rgba(0,0,0,.55)) brightness(2) sepia(1) hue-rotate(-40deg); }
+      50%      { transform: translateX(-6%); filter: drop-shadow(0 4px 0 rgba(0,0,0,.55)) brightness(1.4); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hp-fill { transition: none; }
+      .fight-fx.show,
+      .fight-arena.punching .fighter-viking .fighter-sprite,
+      .fight-arena.boar-hit .fighter-boar .fighter-sprite,
+      .fight-arena.viking-hit .fighter-viking .fighter-sprite,
+      .fight-arena.boar-attack .fighter-boar .fighter-sprite {
+        animation: none;
+      }
+      .fight-fx.show { opacity: 1; }
+    }
+    @media (max-width: 430px) {
+      .fight-arena { min-height: 200px; padding: .7rem .55rem .85rem; }
+      .fight-stage { min-height: 120px; }
+      .hp-label { font-size: .32rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -576,6 +842,73 @@
       </div>
       <p class="note" id="stale-note">This code may be stale — the watcher has not refreshed recently. Ask the host if joining fails.</p>
       <p class="note" id="error-note"></p>
+    </section>
+
+
+    <section class="card fight-card" aria-labelledby="fight-title">
+      <div class="section-heading">
+        <h2 id="fight-title">WOODS BRAWL</h2>
+        <span class="section-kicker">Tap to punch · boar bites back</span>
+      </div>
+      <p class="fight-hint">Tap the arena or hit PUNCH. Drop the boar before it flatlines you.</p>
+      <div
+        class="fight-arena"
+        id="fight-arena"
+        role="button"
+        tabindex="0"
+        aria-label="Fight arena. Tap or press Enter to punch the boar."
+      >
+        <div class="fight-hud">
+          <div class="hp-block">
+            <div class="hp-label"><span>Viking</span><span class="hp-num" id="viking-hp-num">100</span></div>
+            <div class="hp-bar" aria-hidden="true"><div class="hp-fill viking" id="viking-hp" style="width:100%"></div></div>
+          </div>
+          <div class="hp-block">
+            <div class="hp-label"><span>Boar</span><span class="hp-num" id="boar-hp-num">100</span></div>
+            <div class="hp-bar" aria-hidden="true"><div class="hp-fill boar" id="boar-hp" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="fight-stage">
+          <div class="fighter fighter-viking">
+            <img class="fighter-sprite" id="fight-viking" src="woods-viking.png" alt="" draggable="false" width="110" height="110" />
+            <span class="fighter-name">Viking</span>
+          </div>
+          <span class="vs-badge" aria-hidden="true">VS</span>
+          <div class="fighter fighter-boar">
+            <svg class="fighter-sprite" id="fight-boar" viewBox="0 0 64 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="crispEdges">
+              <!-- pixel boar -->
+              <rect x="18" y="14" width="28" height="16" fill="#5a3a22"/>
+              <rect x="16" y="16" width="4" height="12" fill="#4a2e18"/>
+              <rect x="44" y="16" width="6" height="12" fill="#6b4528"/>
+              <rect x="48" y="12" width="10" height="10" fill="#6b4528"/>
+              <rect x="56" y="14" width="4" height="4" fill="#3a2414"/>
+              <rect x="52" y="10" width="4" height="4" fill="#8a5a30"/>
+              <rect x="50" y="16" width="3" height="3" fill="#111"/>
+              <rect x="58" y="18" width="4" height="2" fill="#e8e0d0"/>
+              <rect x="14" y="20" width="6" height="4" fill="#3a2414"/>
+              <rect x="12" y="18" width="4" height="3" fill="#c8b090"/>
+              <rect x="22" y="28" width="6" height="8" fill="#4a2e18"/>
+              <rect x="34" y="28" width="6" height="8" fill="#4a2e18"/>
+              <rect x="22" y="34" width="6" height="2" fill="#1a1008"/>
+              <rect x="34" y="34" width="6" height="2" fill="#1a1008"/>
+              <rect x="26" y="12" width="10" height="4" fill="#4a2e18"/>
+              <rect x="28" y="18" width="8" height="4" fill="#7a5030"/>
+              <rect x="20" y="22" width="4" height="3" fill="#2a1a10"/>
+              <rect x="38" y="22" width="4" height="3" fill="#2a1a10"/>
+            </svg>
+            <span class="fighter-name">Boar</span>
+          </div>
+        </div>
+        <span class="fight-fx" id="fight-fx" aria-hidden="true">💥</span>
+        <div class="fight-overlay" id="fight-overlay" aria-live="polite">
+          <p class="fight-result" id="fight-result"></p>
+          <button type="button" id="fight-replay">REPLAY</button>
+        </div>
+      </div>
+      <div class="fight-controls">
+        <button type="button" id="fight-punch">PUNCH</button>
+        <button type="button" class="secondary" id="fight-reset">RESET</button>
+      </div>
     </section>
 
     <section class="card" aria-labelledby="join-title">
@@ -806,6 +1139,156 @@
 
     refresh();
     setInterval(refresh, 30000);
+
+    /* ===== Woods Brawl mini-game ===== */
+    (function initWoodsBrawl() {
+      const MAX_HP = 100;
+      const PUNCH_DMG = [14, 22];
+      const BOAR_DMG = [10, 18];
+      const BOAR_INTERVAL_MS = 1700;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const arena = document.getElementById('fight-arena');
+      const vikingHpEl = document.getElementById('viking-hp');
+      const boarHpEl = document.getElementById('boar-hp');
+      const vikingHpNum = document.getElementById('viking-hp-num');
+      const boarHpNum = document.getElementById('boar-hp-num');
+      const fx = document.getElementById('fight-fx');
+      const overlay = document.getElementById('fight-overlay');
+      const resultEl = document.getElementById('fight-result');
+      const punchBtn = document.getElementById('fight-punch');
+      const resetBtn = document.getElementById('fight-reset');
+      const replayBtn = document.getElementById('fight-replay');
+      if (!arena || !vikingHpEl || !boarHpEl) return;
+
+      let vikingHp = MAX_HP;
+      let boarHp = MAX_HP;
+      let over = false;
+      let busy = false;
+      let boarTimer = null;
+
+      function rand(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function setHp(fillEl, numEl, value) {
+        const v = Math.max(0, Math.min(MAX_HP, value));
+        fillEl.style.width = (v / MAX_HP * 100) + '%';
+        numEl.textContent = String(v);
+      }
+
+      function flashClass(cls, ms) {
+        if (reduceMotion) return;
+        arena.classList.add(cls);
+        setTimeout(() => arena.classList.remove(cls), ms);
+      }
+
+      function showFx(emoji) {
+        if (!fx) return;
+        fx.textContent = emoji;
+        fx.classList.remove('show');
+        void fx.offsetWidth;
+        fx.classList.add('show');
+        setTimeout(() => fx.classList.remove('show'), reduceMotion ? 400 : 360);
+      }
+
+      function endGame(won) {
+        over = true;
+        busy = true;
+        arena.classList.add('is-busy');
+        clearInterval(boarTimer);
+        boarTimer = null;
+        resultEl.textContent = won ? 'VICTORY!' : 'YOU FELL';
+        resultEl.className = 'fight-result ' + (won ? 'win' : 'lose');
+        overlay.classList.add('visible');
+        punchBtn.disabled = true;
+      }
+
+      function boarAttack() {
+        if (over || busy) return;
+        busy = true;
+        flashClass('boar-attack', 340);
+        setTimeout(() => {
+          if (over) { busy = false; return; }
+          const dmg = rand(BOAR_DMG[0], BOAR_DMG[1]);
+          vikingHp = Math.max(0, vikingHp - dmg);
+          setHp(vikingHpEl, vikingHpNum, vikingHp);
+          flashClass('viking-hit', 320);
+          showFx('🐗');
+          if (vikingHp <= 0) {
+            endGame(false);
+          } else {
+            busy = false;
+          }
+        }, reduceMotion ? 40 : 160);
+      }
+
+      function startBoarTimer() {
+        clearInterval(boarTimer);
+        boarTimer = setInterval(boarAttack, BOAR_INTERVAL_MS);
+      }
+
+      function playerPunch(ev) {
+        if (ev) {
+          if (ev.target && (ev.target.closest('button') || ev.target.closest('.fight-overlay'))) return;
+          ev.preventDefault();
+        }
+        if (over || busy) return;
+        busy = true;
+        flashClass('punching', 280);
+        showFx('👊');
+        const dmg = rand(PUNCH_DMG[0], PUNCH_DMG[1]);
+        boarHp = Math.max(0, boarHp - dmg);
+        setHp(boarHpEl, boarHpNum, boarHp);
+        flashClass('boar-hit', 320);
+        setTimeout(() => {
+          if (boarHp <= 0) {
+            endGame(true);
+          } else {
+            busy = false;
+            // occasional immediate counter after a hit
+            if (Math.random() < 0.28) boarAttack();
+          }
+        }, reduceMotion ? 60 : 200);
+      }
+
+      function resetGame() {
+        clearInterval(boarTimer);
+        vikingHp = MAX_HP;
+        boarHp = MAX_HP;
+        over = false;
+        busy = false;
+        arena.classList.remove('is-busy', 'punching', 'boar-hit', 'viking-hit', 'boar-attack');
+        overlay.classList.remove('visible');
+        setHp(vikingHpEl, vikingHpNum, vikingHp);
+        setHp(boarHpEl, boarHpNum, boarHp);
+        punchBtn.disabled = false;
+        startBoarTimer();
+      }
+
+      arena.addEventListener('click', playerPunch);
+      arena.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          playerPunch(e);
+        }
+      });
+      punchBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playerPunch();
+      });
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetGame();
+      });
+      replayBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetGame();
+      });
+
+      resetGame();
+    })();
+
   </script>
 </body>
 </html>
