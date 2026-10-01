@@ -323,20 +323,196 @@
     }
 
 
-    .vikings-online {
-      margin: .85rem 0 .15rem;
-      font-family: "Press Start 2P", monospace;
-      font-size: clamp(.55rem, 2.2vw, .72rem);
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--toxic);
-      text-shadow: 0 0 8px rgba(57,255,20,.45);
+    /* ===== VIKINGS ONLINE PANEL + PIXEL SCENE ===== */
+    .vikings-panel {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem 1.25rem;
+      align-items: center;
+      padding: 1.1rem clamp(.9rem, 3vw, 1.6rem);
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(57,255,20,.035) 7px, rgba(57,255,20,.035) 8px),
+        var(--panel);
+      border-color: var(--toxic-dim);
+      box-shadow:
+        inset 0 0 0 1px #1a2e14,
+        4px 4px 0 #000,
+        0 0 22px rgba(57,255,20,.18);
     }
-    .vikings-online #vikings-count {
+    .vikings-panel[data-state="mine"] {
+      border-color: var(--blood);
+      box-shadow:
+        inset 0 0 0 1px #3a1010,
+        4px 4px 0 #000,
+        0 0 22px rgba(196,20,20,.28);
+    }
+    .vikings-panel[data-state="mine"] .vikings-count-num {
       color: var(--blood-bright);
       text-shadow:
-        2px 2px 0 #2a0505,
-        0 0 8px rgba(255,26,26,.7);
+        3px 3px 0 #2a0505,
+        0 0 14px rgba(255,26,26,.85),
+        0 0 28px rgba(255,26,26,.35);
+      animation: count-pulse 1.4s steps(2, end) infinite;
+    }
+    .vikings-panel[data-state="sleep"] .vikings-count-num {
+      color: var(--ash);
+      text-shadow: 2px 2px 0 #0a0c0a, 0 0 8px rgba(154,160,138,.35);
+    }
+    .viking-scene {
+      width: 96px;
+      height: 80px;
+      flex-shrink: 0;
+      image-rendering: pixelated;
+      position: relative;
+    }
+    .viking-scene svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: visible;
+    }
+    .vikings-status {
+      min-width: 0;
+      text-align: left;
+    }
+    .vikings-kicker {
+      margin: 0 0 .35rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: .4rem;
+      letter-spacing: .18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .vikings-online {
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: .45rem .7rem;
+      font-family: "Press Start 2P", monospace;
+      font-size: clamp(.62rem, 2.6vw, .95rem);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--toxic);
+      text-shadow: 0 0 10px rgba(57,255,20,.5);
+      line-height: 1.35;
+    }
+    .vikings-count-num {
+      font-size: clamp(1.35rem, 7vw, 2.4rem);
+      letter-spacing: .08em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+    .vikings-activity {
+      margin: .55rem 0 0;
+      color: var(--ash);
+      font-size: 1.15rem;
+      line-height: 1.25;
+      letter-spacing: .04em;
+    }
+    .vikings-panel[data-state="mine"] .vikings-activity { color: var(--warn); }
+    .vikings-panel[data-state="sleep"] .vikings-activity { color: var(--muted); }
+
+    /* Scene layers: show sleep OR mine */
+    .scene-sleep, .scene-mine { display: none; }
+    .vikings-panel[data-state="sleep"] .scene-sleep { display: block; }
+    .vikings-panel[data-state="mine"] .scene-mine { display: block; }
+
+    /* --- Sleep animations --- */
+    .zzz {
+      font-family: "Press Start 2P", monospace;
+      font-size: 7px;
+      fill: var(--toxic);
+      opacity: .85;
+    }
+    .zzz-1 { animation: zzz-float 2.4s ease-in-out infinite; }
+    .zzz-2 { animation: zzz-float 2.4s ease-in-out .8s infinite; }
+    .zzz-3 { animation: zzz-float 2.4s ease-in-out 1.6s infinite; }
+    .sleep-body { animation: sleep-bob 2.8s ease-in-out infinite; transform-origin: 48px 58px; }
+    .snore-cloud {
+      fill: rgba(57,255,20,.12);
+      stroke: rgba(57,255,20,.35);
+      stroke-width: 1;
+      animation: snore-pulse 2.8s ease-in-out infinite;
+      transform-origin: 72px 42px;
+    }
+
+    /* --- Mine animations --- */
+    .pick-arm {
+      transform-origin: 42px 36px;
+      animation: pick-swing 0.7s steps(2, end) infinite;
+    }
+    .ore-spark {
+      opacity: 0;
+      animation: ore-sparkle 0.7s steps(1, end) infinite;
+    }
+    .ore-spark.s2 { animation-delay: .18s; }
+    .ore-spark.s3 { animation-delay: .35s; }
+    .rock-chip {
+      opacity: 0;
+      animation: rock-fly 0.7s steps(2, end) infinite;
+    }
+    .rock-chip.c2 { animation-delay: .2s; }
+    .mine-body { animation: mine-sway 0.7s steps(2, end) infinite; transform-origin: 40px 70px; }
+
+    @keyframes zzz-float {
+      0%   { opacity: 0; transform: translate(0, 4px); }
+      25%  { opacity: .95; }
+      100% { opacity: 0; transform: translate(6px, -16px); }
+    }
+    @keyframes sleep-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(2px); }
+    }
+    @keyframes snore-pulse {
+      0%, 100% { opacity: .25; transform: scale(.85); }
+      50% { opacity: .7; transform: scale(1.05); }
+    }
+    @keyframes pick-swing {
+      0%   { transform: rotate(-38deg); }
+      50%  { transform: rotate(28deg); }
+      100% { transform: rotate(-38deg); }
+    }
+    @keyframes ore-sparkle {
+      0%, 40% { opacity: 0; }
+      45%, 70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes rock-fly {
+      0%   { opacity: 0; transform: translate(0, 0); }
+      40%  { opacity: 1; }
+      100% { opacity: 0; transform: translate(10px, -12px); }
+    }
+    @keyframes mine-sway {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(2px); }
+    }
+    @keyframes count-pulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.35); }
+    }
+
+    @media (max-width: 480px) {
+      .vikings-panel {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+      }
+      .vikings-status { text-align: center; }
+      .vikings-online { justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .zzz-1, .zzz-2, .zzz-3,
+      .sleep-body, .snore-cloud,
+      .pick-arm, .ore-spark, .rock-chip, .mine-body,
+      .vikings-panel[data-state="mine"] .vikings-count-num {
+        animation: none !important;
+      }
+      .zzz-1 { opacity: .9; }
+      .zzz-2, .zzz-3 { opacity: .55; }
+      .pick-arm { transform: rotate(-20deg); }
+      .ore-spark.s1, .rock-chip.c1 { opacity: .7; }
     }
 
     .code-wrap { text-align: center; padding: .5rem .3rem .1rem; }
@@ -1882,11 +2058,96 @@
       <div class="divider" aria-hidden="true"><span>■</span></div>
     </header>
 
+    <section class="card vikings-panel" id="vikings-panel" data-state="sleep" aria-labelledby="vikings-online-label">
+      <div class="viking-scene" aria-hidden="true">
+        <!-- Sleeping viking -->
+        <svg class="scene-sleep" viewBox="0 0 96 80" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect x="8" y="62" width="80" height="6" fill="#1a2218"/>
+          <rect x="12" y="58" width="72" height="6" fill="#2a3a22"/>
+          <g class="sleep-body">
+            <!-- helmet -->
+            <rect x="22" y="28" width="28" height="18" fill="#6a727a"/>
+            <rect x="24" y="30" width="24" height="14" fill="#9aa3ad"/>
+            <rect x="20" y="34" width="4" height="12" fill="#c8d0d8"/>
+            <rect x="48" y="34" width="4" height="12" fill="#c8d0d8"/>
+            <rect x="18" y="32" width="4" height="4" fill="#e8c41a"/>
+            <rect x="50" y="32" width="4" height="4" fill="#e8c41a"/>
+            <!-- closed eyes -->
+            <rect x="28" y="38" width="6" height="2" fill="#1a1a1a"/>
+            <rect x="40" y="38" width="6" height="2" fill="#1a1a1a"/>
+            <!-- beard -->
+            <rect x="26" y="44" width="20" height="8" fill="#d4c48a"/>
+            <rect x="28" y="50" width="16" height="4" fill="#c4b47a"/>
+            <!-- body lying -->
+            <rect x="48" y="40" width="28" height="16" fill="#3a4a32"/>
+            <rect x="50" y="42" width="24" height="12" fill="#4a5a42"/>
+            <rect x="72" y="44" width="10" height="10" fill="#8a7060"/>
+          </g>
+          <ellipse class="snore-cloud" cx="72" cy="36" rx="10" ry="6"/>
+          <text class="zzz zzz-1" x="58" y="24">Z</text>
+          <text class="zzz zzz-2" x="68" y="16">z</text>
+          <text class="zzz zzz-3" x="76" y="10">z</text>
+        </svg>
+        <!-- Mining viking -->
+        <svg class="scene-mine" viewBox="0 0 96 80" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect x="4" y="66" width="88" height="6" fill="#1a2218"/>
+          <rect x="8" y="62" width="80" height="6" fill="#2a3a22"/>
+          <!-- ore rock -->
+          <rect x="62" y="42" width="22" height="22" fill="#4a5058"/>
+          <rect x="64" y="44" width="18" height="18" fill="#6a727a"/>
+          <rect x="66" y="46" width="6" height="6" fill="#e8c41a"/>
+          <rect x="74" y="52" width="4" height="4" fill="#39ff14"/>
+          <rect x="70" y="48" width="4" height="4" fill="#c41414"/>
+          <g class="mine-body">
+            <!-- legs -->
+            <rect x="28" y="52" width="8" height="14" fill="#3a4a32"/>
+            <rect x="40" y="52" width="8" height="14" fill="#3a4a32"/>
+            <rect x="28" y="64" width="8" height="4" fill="#2a2018"/>
+            <rect x="40" y="64" width="8" height="4" fill="#2a2018"/>
+            <!-- torso -->
+            <rect x="26" y="34" width="26" height="20" fill="#4a5a42"/>
+            <rect x="28" y="36" width="22" height="16" fill="#5a6a52"/>
+            <!-- head / helmet -->
+            <rect x="30" y="18" width="18" height="16" fill="#6a727a"/>
+            <rect x="32" y="20" width="14" height="12" fill="#9aa3ad"/>
+            <rect x="28" y="22" width="4" height="10" fill="#c8d0d8"/>
+            <rect x="46" y="22" width="4" height="10" fill="#c8d0d8"/>
+            <rect x="26" y="20" width="4" height="4" fill="#e8c41a"/>
+            <rect x="48" y="20" width="4" height="4" fill="#e8c41a"/>
+            <!-- open eyes -->
+            <rect x="34" y="26" width="3" height="3" fill="#1a1a1a"/>
+            <rect x="41" y="26" width="3" height="3" fill="#1a1a1a"/>
+            <!-- beard -->
+            <rect x="32" y="32" width="14" height="6" fill="#d4c48a"/>
+          </g>
+          <g class="pick-arm">
+            <rect x="40" y="34" width="22" height="5" fill="#8a7060"/>
+            <rect x="58" y="28" width="5" height="18" fill="#9aa3ad"/>
+            <rect x="56" y="26" width="9" height="5" fill="#c8d0d8"/>
+            <rect x="54" y="42" width="9" height="4" fill="#6a727a"/>
+          </g>
+          <!-- sparkles -->
+          <rect class="ore-spark s1" x="58" y="36" width="3" height="3" fill="#fff6a0"/>
+          <rect class="ore-spark s2" x="70" y="30" width="3" height="3" fill="#39ff14"/>
+          <rect class="ore-spark s3" x="78" y="38" width="3" height="3" fill="#ff1a1a"/>
+          <rect class="rock-chip c1" x="60" y="44" width="4" height="3" fill="#8a9098"/>
+          <rect class="rock-chip c2" x="66" y="40" width="3" height="3" fill="#6a727a"/>
+        </svg>
+      </div>
+      <div class="vikings-status">
+        <p class="vikings-kicker" id="vikings-online-label">Server presence</p>
+        <div class="vikings-online" id="vikings-online" aria-live="polite">
+          <span class="vikings-label">VIKINGS ONLINE:</span>
+          <span class="vikings-count-num" id="vikings-count">—</span>
+        </div>
+        <p class="vikings-activity" id="vikings-activity">Sleeping in the longhouse…</p>
+      </div>
+    </section>
+
     <section class="card code-card" aria-labelledby="code-title">
       <div class="code-wrap">
         <div id="code-title" class="label gate-label">Current join code</div>
         <div id="join-code" aria-live="polite">------</div>
-        <div class="vikings-online" id="vikings-online" aria-live="polite">VIKINGS ONLINE: <span id="vikings-count">—</span></div>
         <p class="code-caption">Live pass for warriors on PS5, Xbox, and Steam.</p>
         <div class="actions">
           <button type="button" id="copy-btn" aria-label="Copy join code">RIP AND TEAR THE CODE</button>
@@ -2330,6 +2591,8 @@
     const els = {
       code: document.getElementById('join-code'),
       vikingsCount: document.getElementById('vikings-count'),
+      vikingsPanel: document.getElementById('vikings-panel'),
+      vikingsActivity: document.getElementById('vikings-activity'),
       address: document.getElementById('server-address'),
       badge: document.getElementById('status-badge'),
       updated: document.getElementById('updated-at'),
@@ -2361,14 +2624,37 @@
       els.badge.textContent = label;
     }
 
+    function updateVikingsOnline(players) {
+      const n = (typeof players === 'number' && Number.isFinite(players) && players >= 0)
+        ? Math.floor(players)
+        : 0;
+      const known = (typeof players === 'number' && Number.isFinite(players) && players >= 0);
+      if (els.vikingsCount) {
+        els.vikingsCount.textContent = known ? String(n) : '—';
+      }
+      const mining = known && n > 0;
+      if (els.vikingsPanel) {
+        els.vikingsPanel.dataset.state = mining ? 'mine' : 'sleep';
+      }
+      if (els.vikingsActivity) {
+        if (!known) {
+          els.vikingsActivity.textContent = 'No presence signal — assuming rest.';
+        } else if (n === 0) {
+          els.vikingsActivity.textContent = 'No Vikings online — sleeping in the longhouse…';
+        } else if (n === 1) {
+          els.vikingsActivity.textContent = '1 Viking mining for ore in the woods.';
+        } else {
+          els.vikingsActivity.textContent = n + ' Vikings mining for ore in the woods.';
+        }
+      }
+    }
+
     async function refresh() {
+
       try {
         const data = await fetchJsonBust('code.json');
         els.code.textContent = data.code || '------';
-        if (els.vikingsCount) {
-          els.vikingsCount.textContent =
-            (typeof data.players === 'number') ? String(data.players) : '—';
-        }
+        updateVikingsOnline(data.players);
         if (data.address) els.address.textContent = data.address;
         els.updated.textContent = fmt(data.updatedAt);
         els.lastCheck.textContent = fmt(data.lastCheckAt);
